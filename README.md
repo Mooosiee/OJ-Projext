@@ -9,3 +9,13 @@ This system aims to build an **Online Judge(OJ)** platform that :
 Examples of similar platforms:Leetcode,CodeChef.
 ---
 ## 2.TechStack
+
+| Layer          | Technology Used |
+|----------------|------------------|
+| Frontend       | React.js         |
+| Backend        | Express.js (Node.js) |
+| Database       | MongoDB          |
+| Code Execution | Node.js (child_process) / Docker |
+| Containerization | Docker         |
+
+--- 
