@@ -1,13 +1,15 @@
-const express = require("express");
-const app = express();
-const {DBconnection} = require("./database/db");
-const User = require("./models/User");
-const bcrypt = require("bcryptjs");
-const dotenv = require("dotenv");
-const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+import express from "express";
+import { DBconnection } from "./db.js";
+import User from "./models/User.js";
+import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+
 dotenv.config();
+
+const app = express();
 
 app.use(cors());
 app.use(cookieParser());
