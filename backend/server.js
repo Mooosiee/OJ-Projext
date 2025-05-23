@@ -44,8 +44,7 @@ app.post("/register",async (req,res) => {
 
     //save the user in the db
     const user = await User.create({
-        firstName,
-        lastName,
+        username,
         email,
         password : hashedPassword,
     });
