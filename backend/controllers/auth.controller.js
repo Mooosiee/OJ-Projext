@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
-export const register = async (req, res) => {
+export const SignUp = async (req, res,next) => {
   try {
     //get all data from frontend
     const { username, email, password } = req.body;
@@ -34,11 +34,11 @@ export const register = async (req, res) => {
       .status(200)
       .json({ message: "You have succesfully registered!", user });
   } catch (error) {
-        return res.status(500).json(error.message);
+        next(error);
   }};
 
 
-export const login = async (req, res) => {
+export const login = async (req, res,) => {
     try {
       //get all the user data
       const { email, password } = req.body;
