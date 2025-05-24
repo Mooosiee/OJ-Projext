@@ -38,7 +38,7 @@ export const SignUp = async (req, res,next) => {
   }};
 
 
-export const login = async (req, res,) => {
+export const login = async (req, res,next) => {
     try {
       //get all the user data
       const { email, password } = req.body;
@@ -46,15 +46,15 @@ export const login = async (req, res,) => {
       if (!(email && password)) {
         return res.status(400).send("Please enter all the information");
       }
-      //find user in database
+      //find user in database        //key value after ES6
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(401).send("User not found!");
+        return next(errorHandler(404,"User not found!"));
       }
       //match the password
-      const enteredpass = await bcrypt.compare(password, user.password);
+      const enteredpass = await bcrypt.compareSync(password, user.password);
       if (!enteredpass) {
-        return res.status(401).send("Password is incorrect");
+        return next(errorHandler(401,"Wrong Credentials"));
       }
       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
         expiresIn: "1d",
@@ -63,7 +63,7 @@ export const login = async (req, res,) => {
       user.password = undefined;
       //store cookies
       const options = {
-        expires: new Date(Date.now() + 1 * 24 * 60 * 60),
+        expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
         httpOnly: true,
       };
       //send the token
@@ -76,7 +76,7 @@ export const login = async (req, res,) => {
           token,
         });
     } catch (error) {
-      console.log(error);
+      next(error);
     }
   };
 
