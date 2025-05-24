@@ -15,7 +15,7 @@ export const SignUp = async (req, res,next) => {
     //add more validations
 
     //hashing/encrypt the password
-    const hashedPassword =bcrypt.hashSync(password, 10);
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
     //save the user in the db
     const user = await User.create({
@@ -42,10 +42,7 @@ export const login = async (req, res,next) => {
     try {
       //get all the user data
       const { email, password } = req.body;
-      //check all the user data exists
-      if (!(email && password)) {
-        return res.status(400).send("Please enter all the information");
-      }
+    
       //find user in database        //key value after ES6
       const user = await User.findOne({ email });
       if (!user) {
