@@ -18,7 +18,8 @@ export default {
         warning: '#F59E42',          // Warning (amber)
         'text-primary': '#F3F4F6',   // Main text
         'text-secondary': '#9CA3AF', // Subtle text
-        border: '#374151'           // Borders, dividers
+        border: '#374151',           // Borders, dividers
+        custom_btn:"#546E7A"
       }},
   },
   plugins: [],
