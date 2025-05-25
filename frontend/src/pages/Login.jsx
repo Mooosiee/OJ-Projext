@@ -1,9 +1,24 @@
 import { useState } from "react";
 import { Link ,useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { SigninSuccess, SignInFailure } from "../redux/userSlice.js";
+// useDispatch is a hook that gives you access to the dispatch function from the Redux store
+// it allows you to dispatch actions to the store
+//what is react-redux?
+// React-Redux is a library that provides bindings to use Redux with React
+//so Link,useNavigate, useDispatch are all hooks?
+// yes, Link and useNavigate are hooks from React Router for navigation, and useDispatch is a hook from React-Redux 
+// for dispatching actions and  useState is a hook from the React library that allows you to manage state in 
+// functional components
+// Hooks are special functions in React that let you use state and other React features in functional components
+
 export default function Login() {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);//instead of using the local we use this
+  const {error} = useSelector((state) => state.user); // Access error from Redux store
+ 
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Initialize the dispatch function from Redux
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -20,13 +35,13 @@ export default function Login() {
       });
       const data = await res.json();
       if(data.success === false){
-        setError(data.message);
+        dispatch(SignInFailure(data.message)); // Dispatch error message to Redux store
         return;
       }
-      setError(null);
-      navigate('/home');
+      dispatch(SigninSuccess(data)); // Dispatch user data to Redux store
+      navigate('/Home');
     } catch (error) {
-      setError(error.message);
+      dispatch(SignInFailure(error.message));
       return;
     }
   };

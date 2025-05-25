@@ -56,22 +56,14 @@ export const login = async (req, res,next) => {
       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
         expiresIn: "1d",
       });
-      user.token = token;
-      user.password = undefined;
+      const { password: pass, ...rest } = user._doc;
       //store cookies
-      const options = {
-        expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      };
+      
       //send the token
       return res
         .status(200)
-        .cookie("token", token, options)
-        .json({
-          message: "You have succesfully logged in!",
-          success: true,
-          token,
-        });
+        .cookie("token", token, {httpOnly:true})
+        .json({rest});
     } catch (error) {
       next(error);
     }
