@@ -63,7 +63,7 @@ export const login = async (req, res,next) => {
       return res
         .status(200)
         .cookie("token", token, {httpOnly:true})
-        .json({rest});
+        .json(rest);
     } catch (error) {
       next(error);
     }
