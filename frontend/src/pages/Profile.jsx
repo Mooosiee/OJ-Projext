@@ -60,6 +60,20 @@ export default function profile() {
     }
   };
 
+  const handlesignout = async () => {
+    try{
+     const res = await fetch('/backend/auth/logout');
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(DeleteUserFailure(data.message));
+        return;
+      }
+      dispatch(DeleteUserSuccess(data));
+    } catch (error) {
+      dispatch(DeleteUserFailure(data.message));
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -106,7 +120,7 @@ export default function profile() {
         >
           Delete account
         </span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span onClick={handlesignout} className="text-red-700 cursor-pointer">Sign out</span>
       </div>
 
       <p className="text-success mt-5">
