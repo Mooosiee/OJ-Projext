@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyToken } from "../utils/verifyUser.js";
-import { updateUSER } from "../controllers/user.controller.js";
+import { updateUSER ,deleteUSER } from "../controllers/user.controller.js";
 const router = express.Router();
 //why did we use verifyToken here?
 // The verifyToken middleware is used to ensure that the user is authenticated before allowing them to update their profile.    
@@ -9,5 +9,6 @@ const router = express.Router();
 // The ":id" parameter in the URL represents the unique identifier of the user whose profile is being updated. 
 // The verifyToken middleware checks if the user is authenticated before proceeding with the update operation.
 router.post("/update/:id",verifyToken,updateUSER);
+router.delete("/delete/:id",verifyToken,deleteUSER);
 
 export default router;

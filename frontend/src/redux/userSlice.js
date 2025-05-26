@@ -26,16 +26,23 @@ const userSlice = createSlice({
             state.error = action.payload; // Set error message
         },
         UpdateUserSuccess:(state,action) =>{
-            state.currentUser = action.payload; // Update the current user with the new data
+            state.user = action.payload; // Update the current user with the new data
             state.error = null; // Reset error when updating user
         },
         UpdateUserFailure:(state,action) =>{
             state.error = action.payload; // Set error message when updating user fails
+        },
+        DeleteUserSuccess:(state,action) =>{
+            state.user = null; // Clear current user on successful deletion
+            state.error = null; // Reset error when deleting user
+        },
+        DeleteUserFailure:(state,action) =>{
+            state.error = action.payload; // Set error message when deleting user fails
         }
     }
 
 });
-export const { SigninSuccess, SignInFailure,UpdateUserSuccess,UpdateUserFailure } = userSlice.actions; // Export actions for use in components
+export const { SigninSuccess, SignInFailure,UpdateUserSuccess,UpdateUserFailure,DeleteUserSuccess,DeleteUserFailure } = userSlice.actions; // Export actions for use in components
 export default userSlice.reducer; // Export the reducer to be used in the store
 //what is store?
 // The store is the central place where the application's state is stored in Redux
