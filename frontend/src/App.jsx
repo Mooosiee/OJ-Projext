@@ -1,6 +1,6 @@
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import Home from './pages/Home';
-import Problems from './pages/Problems';
+import Problems from './pages/CreateProblems.jsx';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp.jsx';
 import Profile from './pages/Profile';
@@ -11,11 +11,11 @@ export default function App() {
   <Header/>
   <Routes>
     <Route path="/home" element = {<Home/>}/>
-    <Route path="/problems" element = {<Problems/>}/>
     <Route path="/login" element = {<Login/>}/>
     {/* <Route path="/forgot-password" element = {<ForgotPassword/>}/> */}
     <Route path="/signup" element = {<SignUp/>}/>
     <Route path="/profile" element = {<Profile/>}/>
+    <Route path="/create-problem" element = {<Problems/>}/>
   </Routes>
   </BrowserRouter>;
 }

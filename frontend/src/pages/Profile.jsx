@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link ,Navigate } from "react-router-dom";
+
 import {
   UpdateUserSuccess,
   UpdateUserFailure,
@@ -109,9 +110,11 @@ export default function profile() {
         <button className="bg-surface text-white py-2 rounded-md  hover:bg-gray-700 ">
           UPDATE
         </button>
+        <Link to="/create-problem">
         <button className="bg-gray-600 text-white py-2 rounded-md  hover:bg-surface">
           CONTRIBUTE A PROBLEM <span className="ml-2">❤️</span>
         </button>
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
