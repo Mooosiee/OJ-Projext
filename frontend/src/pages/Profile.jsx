@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { Link ,Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 import {
   UpdateUserSuccess,
@@ -14,8 +14,8 @@ export default function profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
   if (!currentUser) {
-  return <Navigate to="/login" />;
-}
+    return <Navigate to="/login" />;
+  }
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -62,8 +62,8 @@ export default function profile() {
   };
 
   const handlesignout = async () => {
-    try{
-     const res = await fetch('/backend/auth/logout');
+    try {
+      const res = await fetch("/backend/auth/logout");
       const data = await res.json();
       if (data.success === false) {
         dispatch(DeleteUserFailure(data.message));
@@ -110,10 +110,11 @@ export default function profile() {
         <button className="bg-surface text-white py-2 rounded-md  hover:bg-gray-700 ">
           UPDATE
         </button>
-        <Link to="/create-problem">
-        <button className="bg-gray-600 text-white py-2 rounded-md  hover:bg-surface">
-          CONTRIBUTE A PROBLEM <span className="ml-2">❤️</span>
-        </button>
+        <Link
+          to="/create-problem"
+          className="bg-gray-600 text-white py-2 rounded-md hover:bg-surface flex justify-center items-center mt-2"
+          style={{ display: "block", textAlign: "center" }} // optional for full-width
+        >CONTRIBUTE A PROBLEM <span className="ml-2">❤️</span>
         </Link>
       </form>
       <div className="flex justify-between mt-5">
@@ -123,12 +124,15 @@ export default function profile() {
         >
           Delete account
         </span>
-        <span onClick={handlesignout} className="text-red-700 cursor-pointer">Sign out</span>
+        <span onClick={handlesignout} className="text-red-700 cursor-pointer">
+          Sign out
+        </span>
       </div>
 
       <p className="text-success mt-5">
         {updateSuccess ? "User Updated Succesfully!!" : ""}
       </p>
+      {/* <p className="text-center hover:text-gray-600">Show created problems</p> */}
     </div>
   );
 }
