@@ -109,8 +109,8 @@ export default function profile() {
         <button className="bg-surface text-white py-2 rounded-md  hover:bg-gray-700 ">
           UPDATE
         </button>
-        <button className="bg-green-800 text-white py-2 rounded-md  hover:bg-green-700 ">
-          CREATE A PROBLEM
+        <button className="bg-gray-600 text-white py-2 rounded-md  hover:bg-surface">
+          CONTRIBUTE A PROBLEM <span className="ml-2">❤️</span>
         </button>
       </form>
       <div className="flex justify-between mt-5">
