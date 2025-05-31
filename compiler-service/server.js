@@ -1,10 +1,10 @@
 import express from "express";
-import compilerRouter from "./compiler-service/compiler.route.js";
+import compilerRouter from "./compiler.route.js";
 
 const app = express();
 
 app.use(express.json());
-app.use("/backend/compiler",compilerRouter);
+app.use("/compiler",compilerRouter);
 
 
 app.listen(8000,() => {
