@@ -1,7 +1,7 @@
-import { errorHandler } from "../utils/error.js";
-import { generateFile } from "../utils/generateFile.js";
-import { executeCpp } from "../utils/executeCpp.js";
-import { generateInputFile } from "../utils/generateInputFile.js";
+import { errorHandler } from "../backend/utils/error.js";
+import { generateFile } from "./generateFile.js";
+import { executeCpp } from "./executeCpp.js";
+import { generateInputFile } from "./generateInputFile.js";
 export const runCompiler = async (req, res, next) => {
   const { lang = "cpp", code , input } = req.body;
   if (code === undefined) {
