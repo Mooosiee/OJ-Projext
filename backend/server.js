@@ -19,6 +19,18 @@ DBconnection();
 app.use("/backend/auth",authRouter);
 app.use("/backend/user",userRouter);
 app.use("/backend/problems",problemRouter);
+// Add this before your submission route
+app.use('/backend/submissions', async (req, res, next) => {
+  try {
+    const problem = await Problem.findById(req.body.problemId);
+    if (!problem) return next(errorHandler(404, "Problem not found"));
+    req.problem = problem;
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 app.use((err,req,res,next) =>{
     const statusCode = err.statusCode || 500;

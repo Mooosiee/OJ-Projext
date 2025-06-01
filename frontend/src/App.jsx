@@ -18,7 +18,7 @@ export default function App() {
     <Route path="/signup" element = {<SignUp/>}/>
     <Route path="/profile" element = {<Profile/>}/>
     <Route path="/create-problem" element = {<CreateProblem/>}/>
-    <Route path="/problems" element = {<ProblemsPage/>}/>
+    <Route path="/problems/all" element = {<ProblemsPage/>}/>
     <Route path="/problems/:id" element = {<SolveProblem/>}/>
   </Routes>
   </BrowserRouter>;
