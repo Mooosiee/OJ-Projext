@@ -6,6 +6,7 @@ import cors from "cors";
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import problemRouter from "./routes/problem.route.js";
+import submissionRouter from "./routes/submission.route.js";
 
 dotenv.config();
 const app = express();
@@ -20,16 +21,7 @@ app.use("/backend/auth",authRouter);
 app.use("/backend/user",userRouter);
 app.use("/backend/problems",problemRouter);
 // Add this before your submission route
-app.use('/backend/submissions', async (req, res, next) => {
-  try {
-    const problem = await Problem.findById(req.body.problemId);
-    if (!problem) return next(errorHandler(404, "Problem not found"));
-    req.problem = problem;
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
+app.use('/backend/submissions',submissionRouter);
 
 
 app.use((err,req,res,next) =>{

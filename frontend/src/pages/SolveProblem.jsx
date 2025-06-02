@@ -4,12 +4,19 @@ import Editor from "@monaco-editor/react";
 
 export default function SolveProblem() {
   const { id } = useParams();
+  // States for "Submit Code" results
+  const [subVerdict, setSubVerdict] = useState("");
+  const [subTestResult, setsubTestResult] = useState([]);
+  const [subError, setSubError] = useState("");
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState("");
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
-  const [testResults, setTestResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // State for "Run Code"
+  const [input, setInput] = useState(""); // This is for the custom input textarea
+  // State for "Run Code" (custom input) results
+  const [customOutput, setCustomOutput] = useState("");
+  // Loading states
+  const [isLoadingSub, setisLoadingSub] = useState(false);
+  const [isLoadingCustomRun, setisLoadingCustomRun] = useState(false); //for "Run Code" button
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -30,11 +37,12 @@ export default function SolveProblem() {
     fetchProblem();
   }, [id]);
 
-  const handleRun = async () => {
-    setIsLoading(true);
-    setOutput("");
-    setTestResults([]);
-
+  const handleSubmit = async () => {
+    setisLoadingSub(true);
+    setSubVerdict("");
+    setsubTestResult([]);
+    setCustomOutput(""); // Clear custom customOarea when submitting officially
+    setSubError("");
     try {
       const res = await fetch("/backend/submissions", {
         method: "POST",
@@ -42,49 +50,53 @@ export default function SolveProblem() {
         body: JSON.stringify({
           problemId: id,
           code,
-          input,
+          //input,// This is the custom input from the textarea-not needed for submit button
         }),
+        credentials: "include",
       });
 
-      const data = await res.json();
-      setOutput(data.output || "No output");
+      const data = await res.json(); // Expected: { verdict, testResults,
+      //  customO(customOutput from compiler, should be null/ignored here) }
+      setSubVerdict(data.verdict || "Verdict not available");
       if (data.testResults) {
-        setTestResults(data.testResults);
+        setsubTestResult(data.testResults);
       }
     } catch (error) {
-      setOutput(error.response?.data?.error || "Error running code");
+      setSubError(error.response?.data?.error || "Error running code");
+      setSubVerdict("Error");
     } finally {
-      setIsLoading(false);
+      setisLoadingSub(false);
     }
+  };
+  const handleRun = async () => {
+    // This function, when implemented, will:
+    // 1. Set setIsLoadingCustomRun(true)
+    // 2. Fetch a new endpoint (e.g., /backend/execute-custom) sending 'code' and 'input'
+    // 3. Update 'setCustomRunOutput' with the result.
+    // 4. Set setIsLoadingCustomRun(false)
   };
 
   if (!problem) return <div>Loading problem...</div>;
   if (problem?.error) return <div>Error: {problem.error}</div>;
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div className="flex h-screen pt-2 ">
       {/* Left Side - Problem Description */}
-      <div
-      
-        style={{
-          flex: 1,
-          padding: "24px",
-          overflowY: "auto",
-          borderRight: "1px solid #eee",
-        }}
-      >
+      <div className="flex-1 p-6 overflow-y-auto border-r border-gray-200 ">
         <h1 className="text-2xl font-semibold">{problem.name}</h1>
         <p className="mt-2 whitespace-pre-wrap">{problem.description}</p>
-        <div
-          className="flex flex-col mt-8 mb-4 "
-        >
+        <div className="flex flex-col mt-8 mb-4 ">
           <div className="border border-l-border px-1">
             <h3 className="font-medium">Input Format</h3>
-            <pre className="italic whitespace-pre-wrap" >{problem.inputFormat}</pre>
+            <pre className="italic whitespace-pre-wrap">
+              {problem.inputFormat}
+            </pre>
           </div>
           <div className="mt-3 border border-l-border px-1">
             <h3 className="font-medium">Output Format</h3>
-            <pre className="italic whitespace-pre-wrap">{problem.outputFormat}</pre>
+            <pre className="italic whitespace-pre-wrap">
+              {problem.outputFormat}
+            </pre>
           </div>
         </div>
         <h3 className="font-semibold">Constraints</h3>
@@ -100,18 +112,9 @@ export default function SolveProblem() {
       </div>
 
       {/* Right Side - Editor and UI */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex", 
-          maxWidth : "50%",
-          flexDirection: "column",
-          background: "#1e1e1e",
-          padding: "24px",
-        }}
-      >
+      <div className="mx-2 flex-1 flex flex-col max-w-[50%] bg-[#1e1e1e] p-5">
         <Editor
-          height="40vh"
+          height="calc(40vh - 20px)" // Adjusted height slightly for better fit
           defaultLanguage="cpp"
           defaultValue={`#include <iostream>
 using namespace std;
@@ -125,81 +128,102 @@ int main() {
           theme="vs-dark"
           options={{ minimap: { enabled: false } }}
         />
-
-        <div style={{ margin: "16px 0" }}>
+        <div className="my-2">
           <textarea
-            rows={4}
-            style={{
-              width: "100%",
-              background: "#222",
-              color: "#fff",
-              border: "1px solid #444",
-              padding: 8,
-            }}
+            rows={2}
+            className="w-full bg-[#222222] text-white border border-[#444444] p-2 rounded"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter custom input here..."
+            disabled={isLoadingSub || isLoadingCustomRun} //textarea will be disabled
+            //why is this useful?-
           />
         </div>
-
-        <button
-          onClick={handleRun}
-          disabled={isLoading}
-          style={{
-            background: isLoading ? "#666" : "#007acc",
-            color: "#fff",
-            padding: "8px 16px",
-            border: "none",
-            borderRadius: 4,
-            cursor: "pointer",
-            marginBottom: "16px",
-          }}
-        >
-          {isLoading ? "Running..." : "Run Code"}
-        </button>
-
-        <div style={{ marginTop: "auto" }}>
-          <h3 style={{ color: "#fff", marginBottom: "8px" }}>Output:</h3>
-          <pre
-            style={{
-              background: "#222",
-              color: "#0f0",
-              padding: "12px",
-              minHeight: "60px",
-              whiteSpace: "pre-wrap",
-              marginBottom: "16px",
-            }}
+        {/*Buttons*/}
+        <div className="flex space-x-2 mb-4">
+          <button
+            onClick={handleRun}
+            disabled={isLoadingSub || isLoadingCustomRun}
+            className={`flex-1 text-white py-2 px-4 border-none rounded cursor-pointer 
+                        ${
+                          isLoadingCustomRun
+                            ? "bg-gray-700"
+                            : "bg-gray-500 hover:bg-gray-400"
+                        }`}
+            title="Run your code with the custom input below (does not submit)"
           >
-            {output}
-          </pre>
+            {isLoadingCustomRun ? "Running..." : "Run Code"}
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isLoadingSub || isLoadingCustomRun}
+            className={`flex-1 text-white py-2 px-4 border-none rounded cursor-pointer
+                      ${
+                        isLoadingSub
+                          ? "bg-gray-700"
+                          : "bg-[#007acc] hover:bg-[#005fa3]"
+                      }`}
+            title="Submit your code for official evaluation against all test cases"
+            //title shows a small tooltip on hover
+            // gives helpful hints to users, especially for icons or buttons that may not be immediately obvious.
+          >
+            {isLoadingSub ? "Submitting..." : "Submit Code"}
+          </button>
+        </div>
+       {/* Results Area: Uses flex-grow to take remaining space and provides its own scroll if needed */}
+        <div className="mt-auto flex flex-col overflow-y-auto" style={{ flexGrow: 1 }}>
+           {/* Display Submission Verdict */}
+           {subVerdict && (
+            <div
+              className={`py-2 px-4 mb-3 rounded text-lg font-semibold text-white text-center
+                          ${subVerdict === "Accepted" ? "bg-green-600" :
+                            subVerdict.toLowerCase().includes("error") || subVerdict === "Verdict not available" || subVerdict === "N/A" ? "bg-yellow-500 text-black" :
+                            "bg-red-600" // For Wrong Answer, TLE, MLE, etc.
+                          }`}
+            >
+              {subVerdict}
+            </div>
+          )}
 
-          {testResults.length > 0 && (
-            <div>
-              <h3 style={{ color: "#fff", marginBottom: "8px" }}>
-                Test Results:
-              </h3>
-              {testResults.map((result, index) => (
+          {/* Display General Submission Error if any, and if not already part of verdict */}
+          {subError && !subVerdict.toLowerCase().includes("error") && (
+            <div className="bg-red-700 text-white p-3 mb-3 rounded text-sm">
+                <strong>Submission Error:</strong> {subError}
+            </div>
+          )}
+
+           {/* Display Output from Custom Run */}
+          {customOutput && (
+            <div className="mb-3">
+              <h3 className="text-white mb-1 text-sm">Output (from 'Run Code' with custom input):</h3>
+              <pre className="bg-[#222222] text-[#00ff00] p-2 text-xs min-h-[40px] whitespace-pre-wrap rounded">
+                {customOutput}
+              </pre>
+            </div>
+          )}
+           {/* Display Detailed Test Results from Submission */}
+          {subTestResult.length > 0 && (
+            <div className="mb-2"> {/* Added mb-2 for spacing at the very bottom */}
+              <h3 className="text-white mb-1 text-sm">Test Case Results:</h3>
+              {subTestResult.map((result, index) => (
                 <div
                   key={index}
-                  style={{
-                    background: result.passed ? "#1a4314" : "#4a0f0f",
-                    padding: "12px",
-                    marginBottom: "8px",
-                    borderRadius: "4px",
-                  }}
+                  className={`p-2 mb-2 rounded text-xs  // Reduced padding and margin for tighter fit
+                              ${result.passed && !result.error ? "bg-[#1a4314]" : "bg-[#4a0f0f]"}`}
                 >
-                  <div style={{ color: "#fff" }}>
+                  <div className="text-white font-medium">
                     Test Case {index + 1}:{" "}
-                    {result.passed ? "✓ Passed" : "✗ Failed"}
+                    {result.passed && !result.error
+                      ? "Passed"
+                      : `Failed ${result.error ? `(Error: ${result.error})` : ''}`
+                    }
                   </div>
-                  {!result.passed && (
-                    <div style={{ marginTop: "8px" }}>
-                      <div style={{ color: "#ccc" }}>Input:</div>
-                      <pre style={{ color: "#fff" }}>{result.input}</pre>
-                      <div style={{ color: "#ccc" }}>Expected:</div>
-                      <pre style={{ color: "#fff" }}>{result.expected}</pre>
-                      <div style={{ color: "#ccc" }}>Actual:</div>
-                      <pre style={{ color: "#fff" }}>{result.actual}</pre>
+                  {/* Show details if not passed or if there's an error message for the test case */}
+                  {(!result.passed || result.error) && (
+                    <div className="mt-1 text-gray-300">
+                      <div className="font-mono"><span className="text-gray-500">Input:</span> {result.input}</div>
+                      <div className="font-mono"><span className="text-gray-500">Expected:</span> {result.expected}</div>
+                      <div className="font-mono"><span className="text-gray-500">Actual:</span> {result.actual}</div>
                     </div>
                   )}
                 </div>
