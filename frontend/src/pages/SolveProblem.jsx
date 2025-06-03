@@ -7,7 +7,7 @@ export default function SolveProblem() {
   // States for "Submit Code" results
   const [subVerdict, setSubVerdict] = useState("");
   const [subTestResult, setsubTestResult] = useState([]);
-  const [subError, setSubError] = useState("");
+  const [error, setError] = useState("");
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState("");
   // State for "Run Code"
@@ -42,7 +42,7 @@ export default function SolveProblem() {
     setSubVerdict("");
     setsubTestResult([]);
     setCustomOutput(""); // Clear custom customOarea when submitting officially
-    setSubError("");
+    setError("");
     try {
       const res = await fetch("/backend/submissions", {
         method: "POST",
@@ -62,18 +62,39 @@ export default function SolveProblem() {
         setsubTestResult(data.testResults);
       }
     } catch (error) {
-      setSubError(error.response?.data?.error || "Error running code");
+      setError(error.response?.data?.error || "Error running code");
       setSubVerdict("Error");
-    } finally {
+    } finally { //Is used to execute code regardless of whether an exception was raised or not in the try block.
       setisLoadingSub(false);
     }
   };
   const handleRun = async () => {
-    // This function, when implemented, will:
-    // 1. Set setIsLoadingCustomRun(true)
-    // 2. Fetch a new endpoint (e.g., /backend/execute-custom) sending 'code' and 'input'
-    // 3. Update 'setCustomRunOutput' with the result.
-    // 4. Set setIsLoadingCustomRun(false)
+    setCustomOutput("");
+    setisLoadingCustomRun(true);
+    setError("");
+    try {
+      const res = await fetch("/backend/custom-in", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          //problemId: id, - not needed for custom input
+          language : "cpp", // will make it dynamic to support more langs
+          code,
+          input // This is the custom input from the textarea-not needed for submit button
+        })
+      });
+
+      const data = await res.json();  // Expected: { output: "...", error: "..." 
+      if(data.success === false){
+        setCustomOutput(data.message);
+      }
+      setCustomOutput(data.output);
+      
+    } catch (error) {
+      setError(error.response?.data?.error || "Error running code");
+    } finally {
+      setisLoadingCustomRun(false);
+    }
   };
 
   if (!problem) return <div>Loading problem...</div>;
@@ -186,9 +207,9 @@ int main() {
           )}
 
           {/* Display General Submission Error if any, and if not already part of verdict */}
-          {subError && !subVerdict.toLowerCase().includes("error") && (
+          {error && !subVerdict.toLowerCase().includes("error") && (
             <div className="bg-red-700 text-white p-3 mb-3 rounded text-sm">
-                <strong>Submission Error:</strong> {subError}
+                <strong>Submission Error:</strong> {error}
             </div>
           )}
 

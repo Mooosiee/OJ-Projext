@@ -10,7 +10,7 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 //filePath = "D:\\GITDEMO\\OJ\\OJ-Projext\\backend\\utils\\codes\\5aa60838-278c-4d4f-a790-f177ba94a923.cpp"
-export const executeCpp = (filePath,inputfilePath) => {
+export const executeCpp = async (filePath,inputfilePath) => {
   //path.basename = 5aa60838-278c-4d4f-a790-f177ba94a923.cpp
   const jobId = path.basename(filePath).split(".")[0]; // = ["5aa60838-278c-4d4f-a790-f177ba94a923" ,"cpp"]
   const outPath = path.join(outputPath, `${jobId}.exe`);

@@ -1,5 +1,5 @@
 import {BrowserRouter,Routes,Route} from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home.jsx';
 import CreateProblem from './pages/CreateProblems.jsx';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp.jsx';

@@ -13,11 +13,13 @@ const dirCodes = path.join(__dirname,"codes");//D:\GITDEMO\OJ\OJ-Projext\backend
 if(!fs.existsSync(dirCodes)){
     fs.mkdirSync(dirCodes,{recursive:true});
 }
-export const generateFile = (lang,code) => {
+export const generateFile =  (lang,code) => {
    const jobId = uuid();
    const filename = `${jobId}.${lang}`;
    const filePath = path.join(dirCodes,filename);
-   fs.writeFileSync(filePath,code);
+   fs.writeFileSync(filePath,code);//writeFileSync is synchronous, these functions don't actually need to be async and 
+   // they don't return a Promise that resolves later with the path.
+   //They return the path string immediately.
    "D:\\GITDEMO\\OJ\\OJ-Projext\\backend\\utils\\codes\\5aa60838-278c-4d4f-a790-f177ba94a923.cpp"
    return filePath;
 }

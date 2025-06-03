@@ -11,7 +11,7 @@ const dirCodes = path.join(__dirname,"inputs");
 if(!fs.existsSync(dirCodes)){
     fs.mkdirSync(dirCodes,{recursive:true});
 }
-export const generateInputFile = async (input) => {
+export const generateInputFile =  (input) => {
    const jobId = uuid();
    const input_filename = `${jobId}.txt`;
    const input_filePath = path.join(dirCodes,input_filename);

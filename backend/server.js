@@ -7,7 +7,7 @@ import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import problemRouter from "./routes/problem.route.js";
 import submissionRouter from "./routes/submission.route.js";
-
+import customInputRouter from "./routes/customIn.route.js"
 dotenv.config();
 const app = express();
 app.use(cors()); 
@@ -22,7 +22,7 @@ app.use("/backend/user",userRouter);
 app.use("/backend/problems",problemRouter);
 // Add this before your submission route
 app.use('/backend/submissions',submissionRouter);
-
+app.use('/backend/custom-in',customInputRouter);
 
 app.use((err,req,res,next) =>{
     const statusCode = err.statusCode || 500;
