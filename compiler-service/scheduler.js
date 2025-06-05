@@ -103,8 +103,8 @@ async function cleanupDirectory(directoryPath, directoryName) {
 //This is the main function that sets up the scheduled cleanup job.
 export function startScheduledCleanup() {
   //This is the cron expression. You can change how often the cleanup runs.
-  const cronSchedule = "*/1 * * * *"; // Every 1 minute for testing
-  // const cronSchedule = '0 3 * * *'; // Every day at 3 AM (for production)
+  //const cronSchedule = "*/1 * * * *"; // Every 1 minute for testing
+   const cronSchedule = '0 3 * * *'; // Every day at 3 AM (for production)
   //Validates the cron pattern to avoid scheduling mistakes.
   if (!cron.validate(cronSchedule)) {
     console.error(`[Node-Cron] Invalid cron pattern: ${cronSchedule}`);
