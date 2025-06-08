@@ -216,7 +216,7 @@ int main() {
            {/* Display Output from Custom Run */}
           {customOutput && (
             <div className="mb-3">
-              <h3 className="text-white mb-1 text-sm">Output (from 'Run Code' with custom input):</h3>
+              <h3 className="text-white mb-1 text-sm">Output:</h3>
               <pre className="bg-[#222222] text-[#00ff00] p-2 text-xs min-h-[40px] whitespace-pre-wrap rounded">
                 {customOutput}
               </pre>

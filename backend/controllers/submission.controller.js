@@ -1,7 +1,5 @@
 // src/controllers/submission.controller.js
 import Submission from "../models/Submission.js";
-// Assuming 'fetch' is globally available (standard in modern Node.js)
-// No need for 'axios' import if you're using fetch directly.
 
 export const submitCode = async (req, res, next) => {
     console.log("--------------------------------------------------"); // Separator for clarity
@@ -16,6 +14,7 @@ export const submitCode = async (req, res, next) => {
         console.log("[Controller] submitCode: Problem name (req.problem.name):", req.problem ? req.problem.name : "req.problem or req.problem.name is MISSING");
 
         // Critical check for problem data and test cases
+        // Prevents calling the compiler with incomplete data.
         if (!req.problem || !req.problem.testcases || !Array.isArray(req.problem.testcases)) {
             console.error("[Controller] submitCode: CRITICAL - req.problem, req.problem.testCases is missing, or testCases is not an array!");
             console.error("[Controller] submitCode: Value of req.problem:", JSON.stringify(req.problem, null, 2)); // Log the whole req.problem object
@@ -28,7 +27,7 @@ export const submitCode = async (req, res, next) => {
         console.log("[Controller] submitCode: Attempting to send request to compiler service (http://localhost:8000/compiler/run)");
         const compilerServicePayload = {
             code,
-            //input, // This is custom input from the user, might be empty/null
+            //input, // This is custom input from the user, might be empty/null for the submit button
             testcases: req.problem.testcases,
         };
         console.log("[Controller] submitCode: Payload to compiler service:", JSON.stringify(compilerServicePayload, (key, value) => key === 'code' ? value.substring(0, 100) + "..." : value, 2));
@@ -80,8 +79,6 @@ export const submitCode = async (req, res, next) => {
             user: req.user.id,
             problem: req.problem._id,
             code,
-            input:null, // Custom input from user - currently null
-            output: data.output, // Ensure 'data' from compiler has 'output' - currently null because only submission is checked;
             verdict: data.verdict, // Ensure 'data' from compiler has 'verdict'
         };
         console.log("[Controller] submitCode: Preparing to save submission with data:", JSON.stringify(submissionData, (key, value) => key === 'code' ? value.substring(0, 100) + "..." : value, 2));

@@ -6,7 +6,7 @@ export const createProblems = async (req, res, next) => {
   try {
     const problems = await Problem.create({
       ...req.body,
-      userRef: req.user._id,
+      userRef: req.user.id,
     }); // <-- Set userRef from the authenticated user! not from the request body
     // Ensure that the userRef is set to the authenticated user's ID
     // (for security).Your verifyToken middleware should put the user’s ID on req.user._id.
@@ -15,7 +15,6 @@ export const createProblems = async (req, res, next) => {
     next(error);
   }
 };
-
 export const getAllProblems = async (req, res, next) => {
   try {
     const problems = await Problem.find().populate("userRef", "username");
@@ -24,8 +23,6 @@ export const getAllProblems = async (req, res, next) => {
     next(error);
   }
 };
-
-
 export const getAProblem = async (req, res, next) => {
   try {
    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {

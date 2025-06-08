@@ -1,11 +1,36 @@
 import mongoose from "mongoose";
 
-const submissionSchema = new mongoose.Schema({
-    problemId : String,
-    code : String,
-    input : String,
-    output : String,
-    verdict : String
-});
+const submissionSchema = new mongoose.Schema(
+  {
+    user: {//"the user who made this submission".
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      // ref : means this `ObjectId` refers to a document in the `user` collection
+      required: true,
+    },
+    problem: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Problem",
+      required: true,
+    },
+    code: {
+      type: String,
+      required: true,
+    },
+    language :{
+      type : String,
+      default : "cpp",
+      enum : ['cpp','python','java','javascript'],
+      required : true
+    },
+    verdict: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export default mongoose.model('Submission',submissionSchema);
+export default mongoose.model("Submission", submissionSchema);

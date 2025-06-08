@@ -1,5 +1,4 @@
 //This file  contains the cleanupDirectory function and a function to initialize the cron schedule.
-
 import cron from "node-cron";
 import fs from "fs/promises"; // Using promise-based filesystem oprations for async/await
 import path from "path";
@@ -14,7 +13,7 @@ const __dirname = path.dirname(__filename); // This will be the directory of the
 // Example: If scheduler.js is in D:\...\compiler-service\scheduler.js
 // then CODES_DIR will be D:\...\compiler-service\codes
 //correctly creates the absolute path to compiler-service/codes/
-const CODES_DIR = path.join(__dirname, "codes"); //D:\GITDEMO\OJ\OJ-Projext\compiler-service\codes
+const CODES_DIR = path.join(__dirname, "codes"); 
 const INPUTS_DIR = path.join(__dirname, "inputs");
 const OUTPUTS_DIR = path.join(__dirname, "outputs");
 
@@ -29,14 +28,14 @@ console.log("[Scheduler] OUTPUTS_DIR resolved to:", OUTPUTS_DIR);
 // 60 * 60 * 1000 ms = 1 hour.
 // 24 * 60 * 60 * 1000 ms = 24 hours.
 //This means: "Delete any file that was last modified more than 1 minute ago."
-const MAX_FILE_AGE_MS = 1 * 60 * 1000; // For testing: delete files older than 1 minute
-// const MAX_FILE_AGE_MS = 24 * 60 * 60 * 1000; // For production: delete files older than 24 hours
+//const MAX_FILE_AGE_MS = 1 * 60 * 1000; // For testing: delete files older than 1 minute
+const MAX_FILE_AGE_MS = 24 * 60 * 60 * 1000; // For production: delete files older than 24 hours
+
 
 // --- Cleanup Function ---
-/*
-This is the main cleanup function. It goes through every file in a given folder 
-and deletes files that are too old. 
 /**
+ This is the main cleanup function. It goes through every file in a given folder 
+ and deletes files that are too old. 
  * Deletes files older than MAX_FILE_AGE_MS in a given directory.
  * @param {string} directoryPath - Absolute path to the directory.
  * @param {string} directoryName - Descriptive Name for logs.

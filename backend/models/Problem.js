@@ -21,7 +21,7 @@ const problemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    userRef: {
+    userRef: {// means "reference to the user who created this problem").
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
