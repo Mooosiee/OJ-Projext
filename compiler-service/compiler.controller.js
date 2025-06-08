@@ -1,10 +1,13 @@
 import { generateFile } from "./generateFile.js";
-import { executeCpp } from "./executeCpp.js";
 import { generateInputFile } from "./generateInputFile.js";
+import { executeCpp } from "./executeCpp.js";
+import { executePython } from "./executePython.js";
+import { executeJava } from "./executeJave.js";
+import { executeJs } from "./executeJS.js";
 
 export const submitCompiler = async (req, res, next) => {
   console.log("--- COMPILER SERVICE /compiler/run HIT ---");
-  const { language = "cpp", code, input, testcases } = req.body;
+  const { language ="cpp", code, input, testcases } = req.body;
 
   if (code === undefined) {
     return res.status(400).json({ error: "Code is required" });

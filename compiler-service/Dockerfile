@@ -1,3 +1,5 @@
+#Note: Using a base like ubuntu might be easier for installing multiple compilers than alpine sometimes,
+#though alpine images are smaller. Adjust JDK/Node.js versions as needed.
 FROM node:18-alpine
 
 WORKDIR /compiler-service-backend 
