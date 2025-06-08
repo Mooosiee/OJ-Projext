@@ -28,8 +28,8 @@ console.log("[Scheduler] OUTPUTS_DIR resolved to:", OUTPUTS_DIR);
 // 60 * 60 * 1000 ms = 1 hour.
 // 24 * 60 * 60 * 1000 ms = 24 hours.
 //This means: "Delete any file that was last modified more than 1 minute ago."
-//const MAX_FILE_AGE_MS = 1 * 60 * 1000; // For testing: delete files older than 1 minute
-const MAX_FILE_AGE_MS = 24 * 60 * 60 * 1000; // For production: delete files older than 24 hours
+const MAX_FILE_AGE_MS = 1 * 60 * 1000; // For testing: delete files older than 1 minute
+// const MAX_FILE_AGE_MS = 24 * 60 * 60 * 1000; // For production: delete files older than 24 hours
 
 
 // --- Cleanup Function ---
@@ -102,8 +102,8 @@ async function cleanupDirectory(directoryPath, directoryName) {
 //This is the main function that sets up the scheduled cleanup job.
 export function startScheduledCleanup() {
   //This is the cron expression. You can change how often the cleanup runs.
-  //const cronSchedule = "*/1 * * * *"; // Every 1 minute for testing
-   const cronSchedule = '0 3 * * *'; // Every day at 3 AM (for production)
+  const cronSchedule = "0 */1 * * *"; // Every 1 hour for testing
+   //const cronSchedule = "0 3 * * *""; // Every day at 3 AM (for production)
   //Validates the cron pattern to avoid scheduling mistakes.
   if (!cron.validate(cronSchedule)) {
     console.error(`[Node-Cron] Invalid cron pattern: ${cronSchedule}`);
