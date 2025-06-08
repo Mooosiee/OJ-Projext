@@ -7,7 +7,7 @@ import { executeJs } from "./executeJS.js";
 
 export const submitCompiler = async (req, res, next) => {
   console.log("--- COMPILER SERVICE /compiler/run HIT ---");
-  const { language ="cpp", code, input, testcases } = req.body;
+  const { language = "cpp", code, input, testcases } = req.body;
 
   if (code === undefined) {
     return res.status(400).json({ error: "Code is required" });
