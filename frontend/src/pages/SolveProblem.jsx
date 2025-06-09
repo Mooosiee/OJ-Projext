@@ -97,9 +97,6 @@ export default function SolveProblem() {
     }
   };
 
-  if (!problem) return <div>Loading problem...</div>;
-  if (problem?.error) return <div>Error: {problem.error}</div>;
-
 
   if (!problem) return <div className="bg-background min-h-screen flex items-center justify-center text-text-primary text-xl">Loading problem...</div>;
   if (problem?.error) return <div className="bg-background min-h-screen flex items-center justify-center text-error text-xl p-6">Error: {problem.error}</div>;

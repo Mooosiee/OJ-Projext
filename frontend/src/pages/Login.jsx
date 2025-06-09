@@ -100,8 +100,8 @@ export default function Login() {
               <p
                 className="font-medium text-secondary hover:text-cyan-400 transition cursor-pointer hover:underline"
                 onClick={() =>
-                  alert("Forgot password clicked - implement functionality.")
-                } // Kept as alert for now
+                  alert("Forgot password clicked - did not implement functionality yet!.")
+                } // An alert for now
               >
                 Forgot password?
               </p>
