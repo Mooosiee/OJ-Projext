@@ -100,77 +100,97 @@ export default function SolveProblem() {
   if (!problem) return <div>Loading problem...</div>;
   if (problem?.error) return <div>Error: {problem.error}</div>;
 
+
+  if (!problem) return <div className="bg-background min-h-screen flex items-center justify-center text-text-primary text-xl">Loading problem...</div>;
+  if (problem?.error) return <div className="bg-background min-h-screen flex items-center justify-center text-error text-xl p-6">Error: {problem.error}</div>;
+
   return (
-    <div className="flex h-screen pt-2 ">
+    <div className="flex h-screen pt-2 bg-background text-text-primary"> {/* Main page background and text */}
       {/* Left Side - Problem Description */}
-      <div className="flex-1 p-6 overflow-y-auto border-r border-gray-200 ">
-        <h1 className="text-2xl font-semibold">{problem.name}</h1>
-        <p className="mt-2 whitespace-pre-wrap">{problem.description}</p>
-        <div className="flex flex-col mt-8 mb-4 ">
-          <div className="border border-l-border px-1">
-            <h3 className="font-medium">Input Format</h3>
-            <pre className="italic whitespace-pre-wrap">
+      <div className="flex-1 p-6 overflow-y-auto border-r border-border bg-surface shadow-lg"> {/* Surface bg for left panel, themed border */}
+        <h1 className="text-3xl font-semibold text-primary mb-4">{problem.name}</h1>
+        <p className="mt-2 whitespace-pre-wrap text-text-secondary leading-relaxed">{problem.description}</p>
+        
+        <div className="flex flex-col mt-8 mb-4 gap-4">
+          <div className="border border-border p-3 rounded-md bg-background">
+            <h3 className="font-semibold text-text-primary mb-1">Input Format</h3>
+            <pre className="italic whitespace-pre-wrap text-text-secondary text-sm">
               {problem.inputFormat}
             </pre>
           </div>
-          <div className="mt-3 border border-l-border px-1">
-            <h3 className="font-medium">Output Format</h3>
-            <pre className="italic whitespace-pre-wrap">
+          <div className="border border-border p-3 rounded-md bg-background">
+            <h3 className="font-semibold text-text-primary mb-1">Output Format</h3>
+            <pre className="italic whitespace-pre-wrap text-text-secondary text-sm">
               {problem.outputFormat}
             </pre>
           </div>
         </div>
-        <h3 className="font-semibold">Constraints</h3>
-        <pre>{problem.constraints}</pre>
-        <div className="mt-3 px-2 border border-l-border">
-          <h3 className="font-medium">Sample Input</h3>
-          <pre className="whitespace-pre-wrap">{problem.sampleInput}</pre>
+
+        <div className="border border-border p-3 rounded-md bg-background mb-4">
+            <h3 className="font-semibold text-text-primary mb-1">Constraints</h3>
+            <pre className="whitespace-pre-wrap text-text-secondary text-sm">{problem.constraints}</pre>
         </div>
-        <div className="mt-3 px-2 border border-l-border">
-          <h3 className="font-medium">Sample Output</h3>
-          <pre className="whitespace-pre-wrap">{problem.sampleOutput}</pre>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="border border-border p-3 rounded-md bg-background">
+            <h3 className="font-semibold text-text-primary mb-1">Sample Input</h3>
+            <pre className="whitespace-pre-wrap text-text-secondary text-sm">{problem.sampleInput}</pre>
+            </div>
+            <div className="border border-border p-3 rounded-md bg-background">
+            <h3 className="font-semibold text-text-primary mb-1">Sample Output</h3>
+            <pre className="whitespace-pre-wrap text-text-secondary text-sm">{problem.sampleOutput}</pre>
+            </div>
         </div>
       </div>
 
       {/* Right Side - Editor and UI */}
-      <div className="mx-2 flex-1 flex flex-col max-w-[50%] bg-[#1e1e1e] p-5">
-        <Editor
-          height="calc(40vh - 20px)" // Adjusted height slightly for better fit
-          defaultLanguage="cpp"
-          defaultValue={`#include <iostream>
-using namespace std;
+      <div className="mx-2 flex-1 flex flex-col max-w-[50%] bg-surface p-5 shadow-lg rounded-lg"> {/* Surface bg for right panel */}
+        {/* Language Selector Placeholder -Will Add when i implement language selection */}
+        {/* <div className="mb-3">
+            <label htmlFor="language-select" className="block mb-1 text-sm font-medium text-text-secondary">Language:</label>
+            <select id="language-select" className="bg-background border border-border text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5">
+                <option value="cpp">C++</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="javascript">JavaScript</option>
+            </select>
+        </div> */}
 
-int main() {
-    // your code goes here
-    return 0;
-}`}
+        <Editor
+          height="50vh"
+          defaultLanguage="cpp" // This will be overridden by 'language' prop if you add language state
+          // language={selectedLanguage} // Example if you add language selection state
+          defaultValue={`#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code goes here\n    return 0;\n}`}
           value={code}
           onChange={(value) => setCode(value || "")}
-          theme="vs-dark"
-          options={{ minimap: { enabled: false } }}
+          theme="vs-dark" // vs-dark is already good for dark themes
+          options={{ 
+            minimap: { enabled: false },
+            fontSize: 14, // Slightly larger font
+            wordWrap: "on", // Enable word wrap
+            scrollBeyondLastLine: false,
+          }}
         />
-        <div className="my-2">
+        <div className="my-3"> {/* Consistent margin */}
+          <label htmlFor="custom-input-area" className="block mb-1 text-sm font-medium text-text-secondary">Custom Input:</label>
           <textarea
-            rows={2}
-            className="w-full bg-[#222222] text-white border border-[#444444] p-2 rounded"
+            id="custom-input-area"
+            rows={3} // Increased rows slightly
+            className="w-full bg-background border border-border text-text-primary p-2.5 rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Enter custom input here..."
-            disabled={isLoadingSub || isLoadingCustomRun} //textarea will be disabled
-            //why is this useful?-
+            placeholder="Enter custom input..."
+            disabled={isLoadingSub || isLoadingCustomRun}
           />
         </div>
-        {/*Buttons*/}
-        <div className="flex space-x-2 mb-4">
+
+        {/* Buttons */}
+        <div className="flex space-x-3 mb-4"> {/* Increased space-x */}
           <button
             onClick={handleRun}
             disabled={isLoadingSub || isLoadingCustomRun}
-            className={`flex-1 text-white py-2 px-4 border-none rounded cursor-pointer 
-                        ${
-                          isLoadingCustomRun
-                            ? "bg-gray-700"
-                            : "bg-gray-500 hover:bg-gray-400"
-                        }`}
+            className={`flex-1 text-white py-2.5 px-4 border-none rounded-lg cursor-pointer transition duration-150 ease-in-out font-medium
+                        ${isLoadingCustomRun ? "bg-gray-700 opacity-70" : "bg-custom_btn hover:bg-opacity-80 focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-gray-500"}`}
             title="Run your code with the custom input below (does not submit)"
           >
             {isLoadingCustomRun ? "Running..." : "Run Code"}
@@ -178,73 +198,70 @@ int main() {
           <button
             onClick={handleSubmit}
             disabled={isLoadingSub || isLoadingCustomRun}
-            className={`flex-1 text-white py-2 px-4 border-none rounded cursor-pointer
-                      ${
-                        isLoadingSub
-                          ? "bg-gray-700"
-                          : "bg-[#007acc] hover:bg-[#005fa3]"
-                      }`}
+            className={`flex-1 text-white py-2.5 px-4 border-none rounded-lg cursor-pointer transition duration-150 ease-in-out font-medium
+                      ${isLoadingSub ? "bg-blue-800 opacity-70" : "bg-primary hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-primary"}`}
             title="Submit your code for official evaluation against all test cases"
-            //title shows a small tooltip on hover
-            // gives helpful hints to users, especially for icons or buttons that may not be immediately obvious.
           >
             {isLoadingSub ? "Submitting..." : "Submit Code"}
           </button>
         </div>
-       {/* Results Area: Uses flex-grow to take remaining space and provides its own scroll if needed */}
-        <div className="mt-auto flex flex-col overflow-y-auto" style={{ flexGrow: 1 }}>
+
+       {/* Results Area */}
+        <div className="mt-auto flex flex-col overflow-y-auto pt-4 border-t border-border" style={{ flexGrow: 1 }}> {/* Added top border */}
            {/* Display Submission Verdict */}
            {subVerdict && (
             <div
-              className={`py-2 px-4 mb-3 rounded text-lg font-semibold text-white text-center
-                          ${subVerdict === "Accepted" ? "bg-green-600" :
-                            subVerdict.toLowerCase().includes("error") || subVerdict === "Verdict not available" || subVerdict === "N/A" ? "bg-yellow-500 text-black" :
-                            "bg-red-600" // For Wrong Answer, TLE, MLE, etc.
+              className={`py-2.5 px-4 mb-3 rounded-lg text-lg font-semibold text-white text-center shadow
+                          ${subVerdict === "Accepted" ? "bg-success" : // Use theme color
+                            subVerdict.toLowerCase().includes("error") || subVerdict === "Verdict not available" || subVerdict === "N/A" ? "bg-warning text-background" : // Use theme color
+                            "bg-error" // Use theme color (For Wrong Answer, TLE, MLE, etc.)
                           }`}
             >
-              {subVerdict}
+              Verdict: {subVerdict} {/* Removed "Verdict: " prefix as it's clear from context */}
             </div>
           )}
 
           {/* Display General Submission Error if any, and if not already part of verdict */}
-          {error && !subVerdict.toLowerCase().includes("error") && (
-            <div className="bg-red-700 text-white p-3 mb-3 rounded text-sm">
-                <strong>Submission Error:</strong> {error}
+          {error && !subVerdict.toLowerCase().includes("error") && ( // 'error' is your general error state
+            <div className="bg-error/20 text-error p-3 mb-3 rounded-lg text-sm border border-error"> {/* Subtle error bg */}
+                <strong>Error:</strong> {error}
             </div>
           )}
 
            {/* Display Output from Custom Run */}
           {customOutput && (
-            <div className="mb-3">
-              <h3 className="text-white mb-1 text-sm">Output:</h3>
-              <pre className="bg-[#222222] text-[#00ff00] p-2 text-xs min-h-[40px] whitespace-pre-wrap rounded">
+            <div className="mb-4">
+              <h3 className="text-text-primary mb-1 text-sm font-medium">Output (from Custom Input):</h3>
+              <pre className="bg-background border border-border text-green-400 p-3 text-xs min-h-[60px] whitespace-pre-wrap rounded-md shadow-sm">
                 {customOutput}
               </pre>
             </div>
           )}
+
            {/* Display Detailed Test Results from Submission */}
           {subTestResult.length > 0 && (
-            <div className="mb-2"> {/* Added mb-2 for spacing at the very bottom */}
-              <h3 className="text-white mb-1 text-sm">Test Case Results:</h3>
+            <div className="mb-2">
+              <h3 className="text-text-primary mb-2 text-sm font-medium">Test Case Results:</h3>
               {subTestResult.map((result, index) => (
                 <div
                   key={index}
-                  className={`p-2 mb-2 rounded text-xs  // Reduced padding and margin for tighter fit
-                              ${result.passed && !result.error ? "bg-[#1a4314]" : "bg-[#4a0f0f]"}`}
+                  className={`p-3 mb-2 rounded-md text-xs shadow-sm border-l-4
+                              ${result.passed && !result.error ? "bg-green-500/10 border-success" : "bg-red-500/10 border-error"}`}
                 >
-                  <div className="text-white font-medium">
+                  <div className="text-text-primary font-semibold mb-1">
                     Test Case {index + 1}:{" "}
-                    {result.passed && !result.error
-                      ? "Passed"
-                      : `Failed ${result.error ? `(Error: ${result.error})` : ''}`
-                    }
+                    <span className={`${result.passed && !result.error ? "text-success" : "text-error"}`}>
+                      {result.passed && !result.error
+                        ? "✓ Passed"
+                        : `✗ Failed ${result.error ? `(${result.error})` : ''}`
+                      }
+                    </span>
                   </div>
-                  {/* Show details if not passed or if there's an error message for the test case */}
                   {(!result.passed || result.error) && (
-                    <div className="mt-1 text-gray-300">
-                      <div className="font-mono"><span className="text-gray-500">Input:</span> {result.input}</div>
-                      <div className="font-mono"><span className="text-gray-500">Expected:</span> {result.expected}</div>
-                      <div className="font-mono"><span className="text-gray-500">Actual:</span> {result.actual}</div>
+                    <div className="mt-1.5 text-text-secondary space-y-1 font-mono text-[11px] leading-relaxed"> {/* Smaller font for details */}
+                      <div><span className="text-gray-500">Input:    </span> <pre className="inline bg-background/50 p-1 rounded">{result.input}</pre></div>
+                      <div><span className="text-gray-500">Expected: </span> <pre className="inline bg-background/50 p-1 rounded">{result.expected}</pre></div>
+                      <div><span className="text-gray-500">Actual:   </span> <pre className="inline bg-background/50 p-1 rounded">{result.actual}</pre></div>
                     </div>
                   )}
                 </div>
