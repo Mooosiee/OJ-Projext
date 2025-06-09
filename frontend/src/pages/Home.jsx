@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 
 // Placeholder Icons (replace with actual SVGs or an icon library)
@@ -8,7 +7,7 @@ const CodeBracketsIcon = () => <svg className="w-10 h-10 md:w-12 md:h-12 text-pr
 
 
 export default function HomePage() {
-  const OJ_NAME = "YourOJName"; // Replace with your OJ's name
+  const OJ_NAME = "OG-OJ"; 
 
   // Calculate the height available after accounting for your header.
   // You'll need to know your header's height. Let's assume it's around 64px (h-16 in Tailwind).
