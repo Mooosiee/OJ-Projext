@@ -1,4 +1,8 @@
 //This file  contains the cleanupDirectory function and a function to initialize the cron schedule.
+//TO DO
+// Implement immediate cleanup for output, code, and input files 
+// after code execution instead of relying solely on scheduled cleanup.
+// This will help reduce temporary file buildup in real-time.
 import cron from "node-cron";
 import fs from "fs/promises"; // Using promise-based filesystem oprations for async/await
 import path from "path";

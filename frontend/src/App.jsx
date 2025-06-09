@@ -3,7 +3,7 @@ import Home from './pages/Home.jsx';
 import CreateProblem from './pages/CreateProblems.jsx';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp.jsx';
-import Profile from './pages/Profile';
+import Profile from './pages/Profile.jsx';
 import ProblemsPage from './pages/ProblemsPage.jsx';
 import SolveProblem from './pages/SolveProblem.jsx';
 // import ForgotPassword from './pages/ForgotPass.jsx';
