@@ -76,135 +76,175 @@ const CreateProblem = () => {
       setError(error.message);
     }
   };
-  return (
-    <main className="max-w-md mx-auto p-2">
-      <h1 className="text-2xl font-bold text-center mb-4">
+
+
+return (
+  <main className="bg-background min-h-screen text-text-primary py-8 px-4">
+    <div className="max-w-2xl mx-auto bg-surface p-6 md:p-8 rounded-xl shadow-2xl">
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-primary">
         Create A New Problem
       </h1>
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <input
-          id="name"
-          type="text"
-          placeholder="Problem Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          required
-        />
-
-        <textarea
-          id="description"
-          placeholder="Problem Description"
-          value={formData.description}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          required
-        />
-
-        <textarea
-          id="inputFormat"
-          placeholder="Input Format"
-          value={formData.inputFormat}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          required
-        />
-
-        <textarea
-          id="outputFormat"
-          placeholder="Output Format"
-          value={formData.outputFormat}
-          onChange={handleChange}
-          className="w-full p-2 border border-gray-300 rounded-lg"
-          required
-        />
-
-        <div className="flex gap-4">
-          <textarea
-            id="constraints"
-            placeholder="Constraints"
-            value={formData.constraints}
+      <form onSubmit={handleSubmit} className="flex flex-col space-y-6"> {/* Increased space-y */}
+        <div>
+          <label htmlFor="name" className="block mb-1 text-sm font-medium text-text-secondary">Problem Name</label>
+          <input
+            id="name"
+            type="text"
+            placeholder="e.g., Two Sum Challenge"
+            value={formData.name}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            required
-          />
-          <textarea
-            id="sampleInput"
-            placeholder="Sample Input"
-            value={formData.sampleInput}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            required
-          />
-          <textarea
-            id="sampleOutput"
-            placeholder="Sample Output"
-            value={formData.sampleOutput}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary"
             required
           />
         </div>
 
-        <div className="flex gap-4">
-          <select
-            id="difficulty"
-            value={formData.difficulty}
+        <div>
+          <label htmlFor="description" className="block mb-1 text-sm font-medium text-text-secondary">Problem Description</label>
+          <textarea
+            id="description"
+            placeholder="Detailed description of the problem..."
+            value={formData.description}
             onChange={handleChange}
-            className="p-2 border border-gray-300 rounded-lg"
+            className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[120px]" // Added min-h
             required
-          >
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-          <div className="">
-            <label className="text-m font-semibold">Select Tag</label>
-            <div className="flex gap-4">
-              {["Array", "Strings", "Graphs", "DP"].map((tags) => (
-                <label key={tags} className="flex items-center ">
+            rows={5} // Suggestion: use rows for textarea initial height
+          />
+        </div>
+
+        <div>
+          <label htmlFor="inputFormat" className="block mb-1 text-sm font-medium text-text-secondary">Input Format</label>
+          <textarea
+            id="inputFormat"
+            placeholder="Describe the input format..."
+            value={formData.inputFormat}
+            onChange={handleChange}
+            className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[80px]"
+            required
+            rows={3}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="outputFormat" className="block mb-1 text-sm font-medium text-text-secondary">Output Format</label>
+          <textarea
+            id="outputFormat"
+            placeholder="Describe the output format..."
+            value={formData.outputFormat}
+            onChange={handleChange}
+            className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[80px]"
+            required
+            rows={3}
+          />
+        </div>
+
+        {/* Constraints, Sample Input, Sample Output in a grid for better layout on wider screens */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <div>
+            <label htmlFor="constraints" className="block mb-1 text-sm font-medium text-text-secondary">Constraints</label>
+            <textarea
+              id="constraints"
+              placeholder="e.g., 1 <= N <= 10^5"
+              value={formData.constraints}
+              onChange={handleChange}
+              className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[100px]"
+              required
+              rows={4}
+            />
+          </div>
+          <div>
+            <label htmlFor="sampleInput" className="block mb-1 text-sm font-medium text-text-secondary">Sample Input</label>
+            <textarea
+              id="sampleInput"
+              placeholder="Example input..."
+              value={formData.sampleInput}
+              onChange={handleChange}
+              className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[100px]"
+              required
+              rows={4}
+            />
+          </div>
+          <div>
+            <label htmlFor="sampleOutput" className="block mb-1 text-sm font-medium text-text-secondary">Sample Output</label>
+            <textarea
+              id="sampleOutput"
+              placeholder="Corresponding sample output..."
+              value={formData.sampleOutput}
+              onChange={handleChange}
+              className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[100px]"
+              required
+              rows={4}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:items-center md:gap-6 gap-4"> {/* Responsive layout for difficulty and tags */}
+          <div>
+            <label htmlFor="difficulty" className="block mb-1 text-sm font-medium text-text-secondary">Difficulty</label>
+            <select
+              id="difficulty"
+              value={formData.difficulty}
+              onChange={handleChange}
+              className="w-full md:w-auto p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary"
+              required
+            >
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          <div className="mt-4 md:mt-0"> {/* Adjust margin for smaller screens */}
+            <label className="block mb-2 text-sm font-medium text-text-secondary">Select Tag</label>
+            <div className="flex flex-wrap gap-x-6 gap-y-2"> {/* Allow tags to wrap and have consistent gap */}
+              {["Array", "Strings", "Graphs", "DP", "Math", "Trees"].map((tagValue) => ( // Added more example tags
+                <label key={tagValue} className="flex items-center cursor-pointer">
                   <input
                     onChange={handleChange}
                     type="radio"
-                    name="tags"
-                    value={tags}
-                    checked={formData.tags === tags}
-                    className="mr-2"
+                    name="tags" // Name must be the same for radio group
+                    value={tagValue}
+                    checked={formData.tags === tagValue}
+                    className="mr-2 h-4 w-4 text-primary bg-gray-700 border-border focus:ring-primary focus:ring-offset-surface" // Themed radio button
                   />
-                  <label className="text-sm">{tags}</label>
+                  <span className="text-sm text-text-secondary">{tagValue}</span>
                 </label>
               ))}
             </div>
           </div>
         </div>
+
         <div>
-          <label className="text-m font-semibold mb-2 block">Test Cases</label>
+          <label htmlFor="testcases" className="block mb-1 text-sm font-medium text-text-secondary">Test Cases</label>
           <textarea
             id="testcases"
-            className="w-full p-2 border border-gray-300 rounded-lg"
-            placeholder={`Paste your test cases here, e.g.:\ninput1 | output1`}
+            className="w-full p-3 bg-background border border-border text-text-primary rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary min-h-[100px]"
+            placeholder={`Paste your test cases here, e.g.:\ninput1 | output1\n1 2 3 | 6`}
             value={formData.testcases}
             onChange={handleChange}
-            rows={2}
+            rows={4} // Increased rows
+            required // Added required if testcases are mandatory
           />
-          <p className="text-xs font-semibold text-gray-500 mt-1">
-            Enter each test case on a new line, separating input and output with
-            a <b>|</b> (pipe).
+          <p className="text-xs text-text-secondary mt-1.5"> {/* Adjusted margin and text color */}
+            Enter each test case on a new line, separating input and output with a <b>|</b> (pipe).
             <br />
-            <code>Example: 1 2 3 | 6</code>
+            Example: <code>1 2 3 | 6</code>
           </p>
         </div>
 
         <button
           type="submit"
-          className="w-full p-2 bg-custom_btn text-white rounded-lg"
+          className="w-full p-3 bg-primary text-white rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 transition duration-300"
         >
           Create Problem
         </button>
-        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {error && (
+          <p className="text-error mt-3 text-center font-medium bg-red-500/10 p-2 rounded-md border border-error/30">
+            {typeof error === 'string' ? error : "An error occurred. Please check your input."}
+          </p>
+        )}
       </form>
-    </main>
-  );
+    </div>
+  </main>
+);
 };
 
 export default CreateProblem;
