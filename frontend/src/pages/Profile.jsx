@@ -82,21 +82,31 @@ export default function Profile() {
   };
 
   return (
-    <div className="bg-background min-h-screen text-text-primary py-8 px-4"> {/* Ensure page background is dark */}
-      <div className="max-w-lg mx-auto bg-surface p-6 md:p-8 rounded-xl shadow-2xl"> {/* Card background */}
+    <div className="bg-background min-h-screen text-text-primary py-8 px-4">
+      {" "}
+      {/* Ensure page background is dark */}
+      <div className="max-w-lg mx-auto bg-surface p-6 md:p-8 rounded-xl shadow-2xl">
+        {" "}
+        {/* Card background */}
         <h1 className="text-3xl md:text-4xl font-semibold text-center my-7 text-primary">
           PROFILE
         </h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6"> {/* Increased gap for better spacing */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {" "}
+          {/* Increased gap for better spacing */}
           <img
             src={currentUser.avatar}
             alt="profile"
             className="h-28 w-28 rounded-full object-cover cursor-pointer self-center border-4 border-primary shadow-lg" // Added primary border to avatar
           />
-          
           {/* Username Input */}
           <div>
-            <label htmlFor="username" className="block mb-1 text-sm font-medium text-text-secondary">Username</label>
+            <label
+              htmlFor="username"
+              className="block mb-1 text-sm font-medium text-text-secondary"
+            >
+              Username
+            </label>
             <input
               type="text"
               placeholder="username"
@@ -107,10 +117,14 @@ export default function Profile() {
               autoComplete="username"
             />
           </div>
-
           {/* Email Input */}
           <div>
-            <label htmlFor="email" className="block mb-1 text-sm font-medium text-text-secondary">Email</label>
+            <label
+              htmlFor="email"
+              className="block mb-1 text-sm font-medium text-text-secondary"
+            >
+              Email
+            </label>
             <input
               type="email"
               placeholder="email"
@@ -121,10 +135,14 @@ export default function Profile() {
               autoComplete="email"
             />
           </div>
-
           {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block mb-1 text-sm font-medium text-text-secondary">New Password</label>
+            <label
+              htmlFor="password"
+              className="block mb-1 text-sm font-medium text-text-secondary"
+            >
+              New Password
+            </label>
             <input
               type="password"
               placeholder="Leave blank to keep current"
@@ -134,7 +152,6 @@ export default function Profile() {
               autoComplete="new-password" // Use "new-password" for password change fields
             />
           </div>
-
           <button
             type="submit" // Explicitly type="submit" for the main form button
             className="w-full bg-primary text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-800 font-semibold transition duration-300" // Used primary for update
@@ -148,8 +165,9 @@ export default function Profile() {
             CONTRIBUTE A PROBLEM <span className="ml-2">❤️</span>
           </Link>
         </form>
-
-        <div className="flex justify-between mt-8 pt-6 border-t border-border"> {/* Added top border for separation */}
+        <div className="flex justify-between mt-8 pt-6 border-t border-border">
+          {" "}
+          {/* Added top border for separation */}
           <span
             onClick={() => setShowDelete(true)} // Corrected to use setShowDelete
             className="text-error hover:underline cursor-pointer font-medium"
@@ -163,24 +181,32 @@ export default function Profile() {
             Sign out
           </span>
         </div>
-
         {updateSuccess && (
-          <p className="text-success mt-5 text-center font-medium bg-green-500/10 p-2 rounded-md"> {/* Added subtle background */}
+          <p className="text-success mt-5 text-center font-medium bg-green-500/10 p-2 rounded-md">
+            {" "}
+            {/* Added subtle background */}
             User Updated Successfully!!
           </p>
         )}
         {/* You might want to display Redux errors here too if UpdateUserFailure sets an error in the store */}
         {/* Example: {userErrorFromRedux && <p className="text-error ...">{userErrorFromRedux}</p>} */}
-
-
         {showDelete && ( // Corrected state variable name
-          <div className="fixed inset-0 bg-background bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 p-4"> {/* Added backdrop-blur */}
-            <div className="bg-surface p-6 md:p-8 rounded-xl shadow-2xl max-w-md w-full border border-border"> {/* Consistent card styling */}
-              <h3 className="text-xl font-semibold text-text-primary mb-4">Confirm Deletion</h3>
+          <div className="fixed inset-0 bg-background bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            {" "}
+            {/* Added backdrop-blur */}
+            <div className="bg-surface p-6 md:p-8 rounded-xl shadow-2xl max-w-md w-full border border-border">
+              {" "}
+              {/* Consistent card styling */}
+              <h3 className="text-xl font-semibold text-text-primary mb-4">
+                Confirm Deletion
+              </h3>
               <p className="text-text-secondary mb-6">
-                Are you sure you want to delete your account? This action cannot be undone.
+                Are you sure you want to delete your account? This action cannot
+                be undone.
               </p>
-              <div className="flex justify-end space-x-4"> {/* Increased spacing */}
+              <div className="flex justify-end space-x-4">
+                {" "}
+                {/* Increased spacing */}
                 <button
                   onClick={() => setShowDelete(false)} // Corrected state variable name
                   className="px-5 py-2.5 bg-gray-600 text-text-primary rounded-lg hover:bg-gray-500 transition duration-300 font-medium"
@@ -197,19 +223,22 @@ export default function Profile() {
             </div>
           </div>
         )}
-
         {/* Placeholder for "Show My Created Problems" and "My Submissions" */}
-        <div className="mt-10 pt-6 border-t border-border text-center">
-            <p className="text-text-secondary hover:underline cursor-pointer mb-4">
-                Show My Created Problems 
-            </p>
-            <p className="text-text-secondary hover:underline cursor-pointer">
-                Show My Submissions 
-            </p>
+        <div className="flex flex-col mt-10 pt-6 border-t border-border text-center">
+          <Link
+            to="/user/problems"
+            className="text-text-secondary hover:underline cursor-pointer mb-4"
+          >
+            Show My Created Problems
+          </Link>
+          <Link
+            to="/user/submissions"
+            className="text-text-secondary hover:underline cursor-pointer"
+          >
+            Show My Submissions
+          </Link>
         </div>
-
       </div>
     </div>
-  
   );
 }

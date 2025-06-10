@@ -6,8 +6,6 @@ import {
   getProblems,
   getSubmissions,
 } from "../controllers/user.controller.js";
-import { fetchProblemById } from "../utils/fetchProblem.js";
-// import { getUserProblems } from "../controllers/problems.controller.js";
 const router = express.Router();
 //why did we use verifyToken here?
 // The verifyToken middleware is used to ensure that the user is authenticated before allowing them to update their profile.
