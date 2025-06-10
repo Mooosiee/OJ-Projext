@@ -17,7 +17,7 @@ const router = express.Router();
 // The verifyToken middleware checks if the user is authenticated before proceeding with the update operation.
 router.post("/update/:id", verifyToken, updateUSER);
 router.delete("/delete/:id", verifyToken, deleteUSER);
-router.get("/:userid/problems", verifyToken, getProblems);
-router.get("/:userid/submissions", verifyToken,getSubmissions);
+router.get("/:userId/problems", verifyToken, getProblems);
+router.get("/:userId/submissions", verifyToken,getSubmissions);
 
 export default router;

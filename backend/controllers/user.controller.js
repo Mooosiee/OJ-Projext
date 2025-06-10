@@ -44,7 +44,8 @@ export const deleteUSER = async (req, res, next) => {
 
 export const getProblems = async (req, res, next) => {
   try {
-    const { userId } = req.params;
+    
+    const { userId } = req.params;                   // userId:string 
     const userProblem = await Problem.find({ userRef: userId }); //gives me an array of problems
     res.status(200).json(userProblem);
     
@@ -56,7 +57,7 @@ export const getProblems = async (req, res, next) => {
 export const getSubmissions = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const userSubmission = await Submission.find({ user: userId }).populate(
+    const userSubmission = await Submission.find({ user: userId}).populate(
       "problem"
     );
     res.status(200).json(userSubmission);
