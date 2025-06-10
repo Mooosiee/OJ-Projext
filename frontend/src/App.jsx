@@ -6,6 +6,7 @@ import SignUp from './pages/SignUp.jsx';
 import Profile from './pages/Profile.jsx';
 import ProblemsPage from './pages/ProblemsPage.jsx';
 import SolveProblem from './pages/SolveProblem.jsx';
+import UserCreatedProb from './pages/UserCreatedProblems.jsx'
 // import ForgotPassword from './pages/ForgotPass.jsx';
 import Header from './components/Header';
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
     <Route path="/create-problem" element = {<CreateProblem/>}/>
     <Route path="/problems/all" element = {<ProblemsPage/>}/>
     <Route path="/problems/:id" element = {<SolveProblem/>}/>
+    <Route path="/user/problems" element = {<UserCreatedProb/>}/>
   </Routes>
   </BrowserRouter>;
 }

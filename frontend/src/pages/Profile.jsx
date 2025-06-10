@@ -85,7 +85,7 @@ export default function Profile() {
     <div className="bg-background min-h-screen text-text-primary py-8 px-4"> {/* Ensure page background is dark */}
       <div className="max-w-lg mx-auto bg-surface p-6 md:p-8 rounded-xl shadow-2xl"> {/* Card background */}
         <h1 className="text-3xl md:text-4xl font-semibold text-center my-7 text-primary">
-          Profile
+          PROFILE
         </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-6"> {/* Increased gap for better spacing */}
           <img
