@@ -10,7 +10,7 @@ export default function Header() {
           <h1 className = 'font-bold text-sm sm:text-xl flex flex-wrap'>OG-OJ</h1>
           </Link>
           <ul className='flex gap-4'>
-            <Link to= '/home'>
+            <Link to= '/'>
             <li className=" font-bold hidden sm:inline  hover:text-secondary">Home</li>
             </Link>
             <Link to='/problems/all'>

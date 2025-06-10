@@ -38,7 +38,7 @@ export default function Login() {
         return;
       }
       dispatch(SigninSuccess(data)); // Dispatch user data to Redux store
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       dispatch(SignInFailure(error.message));
       return;
