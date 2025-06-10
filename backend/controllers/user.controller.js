@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
-import { errorHandler } from "../utils/error.js";
 import Problem from "../models/Problem.js";
+import Submission from "../models/Submission.js";
+import { errorHandler } from "../utils/error.js";
 
 export const updateUSER = async (req, res, next) => {
   if (req.user.id !== req.params.id)
@@ -41,4 +42,25 @@ export const deleteUSER = async (req, res, next) => {
   }
 };
 
+export const getProblems = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const userProblem = await Problem.find({ userRef: userId }); //gives me an array of problems
+    res.status(200).json(userProblem);
+    
+  } catch (error) {
+    next(error);
+  }
+};
 
+export const getSubmissions = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const userSubmission = await Submission.find({ user: userId }).populate(
+      "problem"
+    );
+    res.status(200).json(userSubmission);
+  } catch (error) {
+    next(error);
+  }
+};

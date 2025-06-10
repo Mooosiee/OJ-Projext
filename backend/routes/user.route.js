@@ -4,7 +4,9 @@ import {
   updateUSER,
   deleteUSER,
   getProblems,
+  getSubmissions,
 } from "../controllers/user.controller.js";
+import { fetchProblemById } from "../utils/fetchProblem.js";
 // import { getUserProblems } from "../controllers/problems.controller.js";
 const router = express.Router();
 //why did we use verifyToken here?
@@ -15,6 +17,7 @@ const router = express.Router();
 // The verifyToken middleware checks if the user is authenticated before proceeding with the update operation.
 router.post("/update/:id", verifyToken, updateUSER);
 router.delete("/delete/:id", verifyToken, deleteUSER);
-router.get("/:id/problems", verifyToken, getProblems);
-// router.get("create/:id",verifyToken,getUserProblems);
+router.get("/:userid/problems", verifyToken, getProblems);
+router.get("/:userid/submissions", verifyToken,getSubmissions);
+
 export default router;
