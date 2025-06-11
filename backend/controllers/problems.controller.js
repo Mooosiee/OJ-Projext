@@ -51,3 +51,49 @@ export const getAProblem = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateProblem = async (req,res,next) =>{
+try {
+   
+    const { problemId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(problemId)) {
+      return next(errorHandler(400, "Invalid problem ID format"));
+    }
+
+  
+    const updatedProblem = await Problem.findByIdAndUpdate(
+      problemId,
+      req.body, // This contains the updated fields from frontend
+      { new: true } // So Mongo returns the updated document
+    );
+
+   
+    if (!updatedProblem) {
+      return next(errorHandler(404, "Problem not found"));
+    }
+
+   
+    res.status(200).json(updatedProblem);
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteProblem = async (req, res, next) => {
+  try {
+    const { problemId } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(problemId)) {
+      return next(errorHandler(400, "Invalid problem ID format"));
+    }
+
+    const deletedProblem = await Problem.findByIdAndDelete(problemId);
+    console.log(deletedProblem);
+    if (!deletedProblem) {
+      return next(errorHandler(404, "Problem not found"));
+    }
+
+   res.status(200).json(deletedProblem);
+  } catch (error) {
+    next(error);
+  }
+};

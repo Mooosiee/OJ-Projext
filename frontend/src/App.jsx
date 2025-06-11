@@ -8,6 +8,7 @@ import ProblemsPage from "./pages/ProblemsPage.jsx";
 import SolveProblem from "./pages/SolveProblem.jsx";
 import UserCreatedProb from "./pages/UserCreatedProblems.jsx";
 import UserCreatedSub from "./pages/UserCreatedSubmission.jsx";
+import EditProblem from "./pages/EditProblems.jsx"
 // import ForgotPassword from './pages/ForgotPass.jsx';
 import Header from "./components/Header";
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/create-problem" element={<CreateProblem />} />
+        <Route path="/edit-problem/:problemId" element={<EditProblem />} />
         <Route path="/problems/all" element={<ProblemsPage />} />
         <Route path="/problems/:id" element={<SolveProblem />} />
         <Route path="/user/problems" element={<UserCreatedProb />} />

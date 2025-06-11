@@ -14,7 +14,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const dispatch = useDispatch();
-
+  
   if (!currentUser) {
     return <Navigate to="/login" />;
   }

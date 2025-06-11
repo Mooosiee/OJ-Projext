@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-const CreateProblem = () => {
+export default function CreateProblem () {
   const currentUser = useSelector((state) => state.user.user);
   const [formData, setFormData] = useState({
     name: "",
@@ -247,4 +247,3 @@ return (
 );
 };
 
-export default CreateProblem;

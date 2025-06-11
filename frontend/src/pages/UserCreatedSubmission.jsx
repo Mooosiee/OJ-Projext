@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+{/*Not very sure of the UI in this*/}
 export default function MySubmissions() {
   const user  = useSelector((state) => state.user.user);
   const [loading, setLoading] = useState(false);
