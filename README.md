@@ -50,12 +50,13 @@ The system is designed with a decoupled architecture to ensure scalability and m
 
 ```mermaid
 graph TD
-    User[Browser User] -->|HTTPS| Frontend["Frontend (React.js + Tailwind CSS)"];
-    Frontend -->|API Calls (REST/GraphQL)| MainBackend["Main Backend (Node.js + Express.js)"];
-    MainBackend -->|CRUD, Auth| Database["Database (MongoDB Atlas)"];
-    MainBackend -->|Job Submission| MessageQueue["Message Queue (e.g., RabbitMQ, Redis)"];
-    MessageQueue -->|Job Consumption| CompilerService["Compiler Service / Code Execution Engine"];
-    CompilerService -->|Spawns| DockerContainer["Ephemeral Docker Container per Submission"];
-    DockerContainer -->|Executes User Code| UserCode["User Code"];
-    CompilerService -->|Verdict Update (API or DB)| MainBackend;
-    AdminUser[Admin User] -->|HTTPS| Frontend;
+    User[Browser User] -->|HTTPS| Frontend[Frontend: React.js + Tailwind CSS]
+    Frontend -->|API Calls (REST or GraphQL)| MainBackend[Main Backend: Node.js + Express.js]
+    MainBackend -->|CRUD, Auth| Database[MongoDB Atlas]
+    MainBackend -->|Job Submission| MessageQueue[Message Queue: RabbitMQ or Redis]
+    MessageQueue -->|Job Consumption| CompilerService[Compiler Service / Code Execution Engine]
+    CompilerService -->|Spawns| DockerContainer[Docker Container (Ephemeral)]
+    DockerContainer -->|Executes Code| UserCode[User Code]
+    CompilerService -->|Verdict Update| MainBackend
+    AdminUser[Admin User] -->|HTTPS| Frontend
+
