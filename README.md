@@ -51,7 +51,7 @@ The system is designed with a decoupled architecture to ensure scalability and m
 ```mermaid
 graph TD
     User[Browser User] -->|HTTPS| Frontend[Frontend (React.js + Tailwind CSS)];
-    Frontend -->|API Calls (REST)| MainBackend[Main Backend (Node.js + Express.js)];
+    Frontend -->|API Calls (REST/GraphQL)| MainBackend[Main Backend (Node.js + Express.js)];
     MainBackend -->|CRUD, Auth| Database[Database (MongoDB Atlas)];
     MainBackend -->|Job Submission| MessageQueue[Message Queue (e.g., RabbitMQ, Redis Streams)];
     MessageQueue -->|Job Consumption| CompilerService[Compiler Service / Code Execution Engine];
