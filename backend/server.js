@@ -10,10 +10,12 @@ import submissionRouter from "./routes/submission.route.js";
 import customInputRouter from "./routes/customIn.route.js"
 dotenv.config();
 const app = express();
-app.use(cors(
-    origin: "https://og-oj-frontend.onrender.com",
-    credentials: true, 
-)); 
+app.use(
+  cors({
+    origin: "https://og-oj-frontend.onrender.com", // put exact frontend Render URL
+    credentials: true, // must be true if using cookies
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
