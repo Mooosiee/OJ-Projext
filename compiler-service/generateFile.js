@@ -16,7 +16,12 @@ if(!fs.existsSync(dirCodes)){
 }
 export const generateFile =  (lang,code) => {
    const jobId = uuid();
-   const filename = `${jobId}.${lang}`;
+   let filename = `${jobId}.${lang}`;
+   console.log(filename);
+   if(lang === "java"){
+     filename = `Main.${lang}`;
+   }
+   console.log(filename);
    const filePath = path.join(dirCodes,filename);
    fs.writeFileSync(filePath,code);//writeFileSync is synchronous, these functions don't actually need to be async and 
    // they don't return a Promise that resolves later with the path.

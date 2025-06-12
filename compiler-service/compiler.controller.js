@@ -2,92 +2,148 @@ import { generateFile } from "./generateFile.js";
 import { generateInputFile } from "./generateInputFile.js";
 import { executeCpp } from "./executeCpp.js";
 import { executePython } from "./executePython.js";
-import { executeJava } from "./executeJave.js";
-import { executeJs } from "./executeJS.js";
+import { executeJava } from "./executeJava.js";
 
-export const submitCompiler = async (req, res, next) => {
+
+// helper to get appropriate executor function
+const getExecutor = (language) => {
+  switch (language) {
+    case "cpp":
+      return executeCpp;
+    case "py":
+      return executePython;
+    case "java":
+      return executeJava;
+    default:
+      throw new Error("Unsupported language");
+  }
+};
+
+export const submitCompiler = async (req, res) => {
   console.log("--- COMPILER SERVICE /compiler/run HIT ---");
-  const { language = "cpp", code, input, testcases } = req.body;
-
+  const { language = "cpp", code, testcases = []} = req.body;
+  console.log(language);
   if (code === undefined) {
     return res.status(400).json({ error: "Code is required" });
   }
 
   try {
     const filePath = generateFile(language, code);
-    let customOutput = null;
-
-    if (input !== undefined && input !== null && input.trim() !== "") {
-      console.log("Compiler Service: Processing custom input run...");
-      const inputfilePath = generateInputFile(input);
-      customOutput = await executeCpp(filePath, inputfilePath);
-      console.log("Compiler Service: Custom input run output:", customOutput);
-    } else {
-      console.log("Compiler Service: No custom input provided or it's empty. Skipping custom input run.");
-    }
-
+    const execute = getExecutor(language);
+    //Checking Each Testcase
     const testResults = [];
     for (const tc of testcases) {
       try {
         const tcInputPath = generateInputFile(tc.input);
-        const output = await executeCpp(filePath, tcInputPath);
+        const result = await execute(filePath, tcInputPath);
+        console.log(result);
+        const passed = result.stdout.trim() ===  tc.output.trim();
+        console.log(passed);
+        console.log(result.stdout);
+        const verdict = result.timedOut
+          ? "Time Limit Exceeded"
+          : result.stderr
+          ? "Runtime Error"
+          : passed
+          ? "Accepted"
+          : "Wrong Answer";
+
         testResults.push({
           input: tc.input,
           expected: tc.output,
-          actual: output,
-          passed: output.trim() === tc.output.trim(),
+          actual: result.stdout,
+          stderr: result.stderr,
+          timedOut: result.timedOut,
+          passed,
+          verdict,
         });
+        if (verdict !== "Accepted") {
+          break; // Stopping on first non-Accepted result
+        }
       } catch (error) {
         testResults.push({
           input: tc.input,
           error: error.message,
+          verdict : "Runtime Error"
         });
+        break; // Stop on exception 
       }
     }
-
     res.json({
-      output: customOutput,
       testResults,
-      verdict: testResults.every((t) => t.passed) ? "Accepted" : "Wrong Answer",
+      finalVerdict: testResults[testResults.length - 1].verdict, // the last verdict after which we stopped execution
+      passedCount : testResults.filter(tc => tc.verdict === "Accepted").length,
+      totalTests : testcases.length
     });
   } catch (error) {
     console.error("Error in submitCompiler:", error);
-    res.status(500).json({ error: "Internal server error during code submission." });
+    res
+      .status(500)
+      .json({ error: "Internal server error during code submission." });
   }
 };
 
-export const runCompiler = async (req, res, next) => {
-  const { language = "cpp", code, input = "" } = req.body;
+export const runCompiler = async (req, res) => {
+  const { language , code, input = "" } = req.body;
 
   if (!code) {
     console.error("Compiler Service (run-custom): Code is missing.");
     return res.status(400).json({ error: "Code is required" });
   }
 
-  console.log(`Compiler Service (run-custom): Lang: ${language}, Code: ${code.substring(0, 50)}..., Input: ${input}`);
+  console.log(
+    `Compiler Service (run-custom): Lang: ${language}, Code: ${code.substring(
+      0,
+      50
+    )}..., Input: ${input}`
+  );
 
   try {
     const filePath = generateFile(language, code);
-    console.log(`Compiler Service (run-custom): File generated: ${filePath}`);
     const inputFilePath = generateInputFile(input);
-    console.log(`Compiler Service (run-custom): Input file generated: ${inputFilePath}`);
+    const execute = getExecutor(language);
+
+    console.log(`Compiler Service (run-custom): File generated: ${filePath}`);
+    console.log(
+      `Compiler Service (run-custom): Input file generated: ${inputFilePath}`
+    );
+
     console.log("Compiler Service (run-custom): Executing code...");
-    const executionOutput = await executeCpp(filePath, inputFilePath);
-    console.log("Compiler Service (run-custom): Execution finished. Output:", executionOutput);
+    const result = await execute(filePath, inputFilePath);
+    console.log(
+      "Compiler Service (run-custom): Execution finished. Output:",
+      result
+    );
+
+    // Determine verdict for custom run
+    const passed = !result.stderr && !result.timedOut;
+    const verdict = result.timedOut
+      ? "Time Limit Exceeded"
+      : result.stderr
+      ? "Runtime Error"
+      : "Success";
 
     res.json({
-      output: executionOutput.trim(),
-      error: null,
+      output: result.stdout || "",
+      error: result.stderr || null,
+      exitCode: result.exitCode,
+      timedOut: result.timedOut,
+      verdict,
     });
   } catch (error) {
     console.error("--- ERROR IN COMPILER SERVICE run-custom ---");
     console.error("Error message:", error.message);
     console.error("Error stack:", error.stack);
 
-    const outputFromError = error.stdout || error.stderr || "";
+    const outputFromError =
+      error.stdout || error.stderr || error.error?.message || "Unknown error";
+
     res.status(500).json({
       output: outputFromError.trim(),
-      error: error.message || "An internal error occurred in the compiler service during custom run.",
+      error:
+        error.message ||
+        "An internal error occurred in the compiler service during custom run.",
+      verdict: "Runtime Error",
     });
   }
 };

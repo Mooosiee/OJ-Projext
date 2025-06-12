@@ -113,7 +113,7 @@ export function startScheduledCleanup() {
     console.error(`[Node-Cron] Invalid cron pattern: ${cronSchedule}`);
     return;
   }
-  console.log(`[Node-Cron] Scheduling cleanup every minute...`);
+  console.log(`[Node-Cron] Scheduling cleanup every hour...`);
   /*This sets the job to run every minute (or at the time you set).
 It:
 Logs the start time

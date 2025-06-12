@@ -4,6 +4,8 @@ import Editor from "@monaco-editor/react";
 
 export default function SolveProblem() {
   const { id } = useParams();
+  const [selectedLanguage, setSelectedLanguage] = useState("cpp"); // State for language selection
+  
   // States for "Submit Code" results
   const [subVerdict, setSubVerdict] = useState("");
   const [subTestResult, setsubTestResult] = useState([]);
@@ -17,6 +19,15 @@ export default function SolveProblem() {
   // Loading states
   const [isLoadingSub, setisLoadingSub] = useState(false);
   const [isLoadingCustomRun, setisLoadingCustomRun] = useState(false); //for "Run Code" button
+
+  useEffect(() => {
+  const templates = {
+    cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code goes here\n    return 0;\n}`,
+    py: `# Your Python code goes here\nprint("Hello from Python!")`,
+    java: `// Your Java code goes here\n// Ensure your class name is Main if submitting to a typical OJ system\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello from Java!");\n    }\n}`,
+  };
+  setCode(templates[selectedLanguage]);
+}, [selectedLanguage]);
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -48,16 +59,17 @@ export default function SolveProblem() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          language : selectedLanguage,
           problemId: id,
           code,
-          //input,// This is the custom input from the textarea-not needed for submit button
         }),
         credentials: "include",
       });
 
       const data = await res.json(); // Expected: { verdict, testResults,
       //  customO(customOutput from compiler, should be null/ignored here) }
-      setSubVerdict(data.verdict || "Verdict not available");
+      console.log(data);
+      setSubVerdict(data.finalVerdict || "Verdict not available");
       if (data.testResults) {
         setsubTestResult(data.testResults);
       }
@@ -78,7 +90,7 @@ export default function SolveProblem() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           //problemId: id, - not needed for custom input
-          language : "cpp", // will make it dynamic to support more langs
+          selectedLanguage, // will make it dynamic to support more langs
           code,
           input // This is the custom input from the textarea-not needed for submit button
         })
@@ -87,6 +99,7 @@ export default function SolveProblem() {
       const data = await res.json();  // Expected: { output: "...", error: "..." 
       if(data.success === false){
         setCustomOutput(data.message);
+        return;
       }
       setCustomOutput(data.output);
       
@@ -141,22 +154,25 @@ export default function SolveProblem() {
       </div>
 
       {/* Right Side - Editor and UI */}
-      <div className="mx-2 flex-1 flex flex-col max-w-[50%] bg-surface p-5 shadow-lg rounded-lg"> {/* Surface bg for right panel */}
+      <div className="mx-2 flex-1 flex flex-col max-w-[50%] bg-surface p-2 shadow-lg rounded-lg"> {/* Surface bg for right panel */}
         {/* Language Selector Placeholder -Will Add when i implement language selection */}
-        {/* <div className="mb-3">
+        <div className="mb-2">
             <label htmlFor="language-select" className="block mb-1 text-sm font-medium text-text-secondary">Language:</label>
-            <select id="language-select" className="bg-background border border-border text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5">
+            <select id="language-select" 
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            className="bg-background border border-border text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
+            disabled={isLoadingSub || isLoadingCustomRun}>
                 <option value="cpp">C++</option>
-                <option value="python">Python</option>
+                <option value="py">Python</option>
                 <option value="java">Java</option>
-                <option value="javascript">JavaScript</option>
             </select>
-        </div> */}
+        </div> 
 
         <Editor
-          height="50vh"
+          height="35vh"
           defaultLanguage="cpp" // This will be overridden by 'language' prop if you add language state
-          // language={selectedLanguage} // Example if you add language selection state
+          language={selectedLanguage} // Example if you add language selection state
           defaultValue={`#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code goes here\n    return 0;\n}`}
           value={code}
           onChange={(value) => setCode(value || "")}
@@ -168,12 +184,12 @@ export default function SolveProblem() {
             scrollBeyondLastLine: false,
           }}
         />
-        <div className="my-3"> {/* Consistent margin */}
+        <div className="my-2"> {/* Consistent margin */}
           <label htmlFor="custom-input-area" className="block mb-1 text-sm font-medium text-text-secondary">Custom Input:</label>
           <textarea
             id="custom-input-area"
-            rows={3} // Increased rows slightly
-            className="w-full bg-background border border-border text-text-primary p-2.5 rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary"
+            rows={2} // Increased rows slightly
+            className="w-full bg-background border border-border text-text-primary p-1.5 rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Enter custom input..."
@@ -182,7 +198,7 @@ export default function SolveProblem() {
         </div>
 
         {/* Buttons */}
-        <div className="flex space-x-3 mb-4"> {/* Increased space-x */}
+        <div className="flex space-x-3 mb-2"> {/* Increased space-x */}
           <button
             onClick={handleRun}
             disabled={isLoadingSub || isLoadingCustomRun}
@@ -221,6 +237,7 @@ export default function SolveProblem() {
           {/* Display General Submission Error if any, and if not already part of verdict */}
           {error && !subVerdict.toLowerCase().includes("error") && ( // 'error' is your general error state
             <div className="bg-error/20 text-error p-3 mb-3 rounded-lg text-sm border border-error"> {/* Subtle error bg */}
+            {/* strong tag : tells browsers, screen readers, and search engines that this text is important. */}
                 <strong>Error:</strong> {error}
             </div>
           )}
@@ -249,8 +266,8 @@ export default function SolveProblem() {
                     Test Case {index + 1}:{" "}
                     <span className={`${result.passed && !result.error ? "text-success" : "text-error"}`}>
                       {result.passed && !result.error
-                        ? "✓ Passed"
-                        : `✗ Failed ${result.error ? `(${result.error})` : ''}`
+                        ? "Passed"
+                        : `Failed ${result.error ? `(${result.error})` : ''}`
                       }
                     </span>
                   </div>
@@ -269,4 +286,4 @@ export default function SolveProblem() {
       </div>
     </div>
   );
-}
+} 

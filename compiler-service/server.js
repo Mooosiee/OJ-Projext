@@ -10,7 +10,7 @@ app.use(cors({
   origin: 'http://localhost:5000' // Only allow main backend
 }));
 
-// Add timeout to executeCpp.js
+
 
 
 app.listen(8000,() => {

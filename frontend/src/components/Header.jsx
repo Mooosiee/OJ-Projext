@@ -11,10 +11,10 @@ export default function Header() {
           </Link>
           <ul className='flex gap-4'>
             <Link to= '/'>
-            <li className=" font-bold hidden sm:inline  hover:text-secondary">Home</li>
+            <li className=" font-bold hidden sm:inline  hover:text-primary">Home</li>
             </Link>
             <Link to='/problems/all'>
-            <li className="font-bold hidden sm:inline  hover:text-secondary">Problems</li>
+            <li className="font-bold hidden sm:inline  hover:text-primary">Problems</li>
             </Link>
             <Link to='/profile'>
             {currentUser ? (

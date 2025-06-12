@@ -69,7 +69,6 @@ export default function CreateProblem () {
 
       if (data.success === false) {
         setError(data.message);
-       
       }
       navigate(`/problems/${data._id}`);
     } catch (error) {

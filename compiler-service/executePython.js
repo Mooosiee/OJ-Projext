@@ -7,33 +7,41 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const outputPath = path.join(__dirname, "outputs");
 
+// Create outputs directory if it doesn't exist
 if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
 export const executePython = async (filePath, inputfilePath) => {
-  const jobId = path.basename(filePath).split(".")[0];
-  // Optional : storing output logs here
-  //No output file (interpreted)
 
-  return new Promise((resolve, reject) => {
-    // - `python` runs the Python script
-    // - `< inputFilePath` pipes input into the script
-
+  console.log("[executePython] : Entered");
+  return new Promise((resolve) => {
     const command = `python3 "${filePath}" < "${inputfilePath}"`;
 
-    exec(command,{ timeout: 3000},(error, stdout, stderr) => {
+    exec(command, { timeout: 3000 }, (error, stdout, stderr) => {
       if (error) {
-        // Compilation/runtime error (e.g., syntax error)
-        reject({ error });
-        return;
+        if (error.killed) {
+          return resolve({
+            stdout: "",
+            stderr: "Time Limit Exceeded",
+            exitCode: error.code || 1,
+            timedOut: true,
+          });
+        }
+        return resolve({
+          stdout: "",
+          stderr: stderr || error.message,
+          exitCode: error.code || 1,
+          timedOut: false,
+        });
       }
-      if (stderr) {
-        // Python's runtime error (e.g., IndexError, ValueError, etc.)
-        reject({ stderr });
-        return;
-      }
-      resolve(stdout);
+
+      return resolve({
+        stdout: stdout.trim(),
+        stderr: stderr?.trim() || "",
+        exitCode: 0,
+        timedOut: false,
+      });
     });
   });
 };

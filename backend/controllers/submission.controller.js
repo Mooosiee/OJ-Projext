@@ -5,7 +5,7 @@ export const submitCode = async (req, res, next) => {
     console.log("--------------------------------------------------"); // Separator for clarity
     console.log("[Controller] submitCode: Entered");
     try {
-        const { problemId, code } = req.body;
+        const { language,problemId, code } = req.body;
         console.log("[Controller] submitCode: Request body received - problemId:", problemId, " | Code snippet (start):", code ? code.substring(0, 50) + "..." : "No code");//, " | Input:", input || "No custom input");
 
         // Log details from previous middlewares
@@ -26,6 +26,7 @@ export const submitCode = async (req, res, next) => {
         // Forward to compiler service
         console.log("[Controller] submitCode: Attempting to send request to compiler service (http://localhost:8000/compiler/run)");
         const compilerServicePayload = {
+            language,
             code,
             //input, // This is custom input from the user, might be empty/null for the submit button
             testcases: req.problem.testcases,
@@ -43,7 +44,7 @@ export const submitCode = async (req, res, next) => {
 
         console.log("[Controller] submitCode: Compiler service responded with status:", compilerRes.status, compilerRes.statusText);
 
-        // Check if the fetch request itself was successful (HTTP status 200-299)
+        // Check if the fetch request itself was successful
         if (!compilerRes.ok) {
             let compilerErrorMsg = `Compiler service request failed with status: ${compilerRes.status}`;
             let errorDetails = null;
@@ -66,7 +67,7 @@ export const submitCode = async (req, res, next) => {
 
         const data = await compilerRes.json(); // Parse the JSON response body
         console.log("[Controller] submitCode: Successfully received and parsed data from compiler service:", JSON.stringify(data, null, 2));
-
+        console.log(data);
         // Check for Submission model
         if (typeof Submission === 'undefined' || !Submission) {
              console.error("[Controller] submitCode: CRITICAL - Submission model is undefined here!");
@@ -79,7 +80,8 @@ export const submitCode = async (req, res, next) => {
             user: req.user.id,
             problem: req.problem._id,
             code,
-            verdict: data.verdict, // Ensure 'data' from compiler has 'verdict'
+            language,
+            verdict: data.finalVerdict, // Ensure 'data' from compiler has 'verdict'
         };
         console.log("[Controller] submitCode: Preparing to save submission with data:", JSON.stringify(submissionData, (key, value) => key === 'code' ? value.substring(0, 100) + "..." : value, 2));
 
