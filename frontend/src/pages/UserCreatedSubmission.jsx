@@ -13,7 +13,7 @@ export default function MySubmissions() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`/backend/user/${user._id}/submissions`);
+        const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/${user._id}/submissions`);
         const data = await res.json();
         if (data.success === false) {
           setError(data.message);
