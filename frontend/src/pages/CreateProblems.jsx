@@ -55,7 +55,7 @@ export default function CreateProblem () {
         .filter((pair) => pair.length === 2 && pair[0] && pair[1])
         .map(([input, output]) => ({ input, output }));
 
-      const res = await fetch(`/backend/problems/create`, {
+      const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
