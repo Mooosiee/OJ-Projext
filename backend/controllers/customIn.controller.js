@@ -17,7 +17,7 @@ export const executeCustomCode = async (req, res, next) => {
 
     console.log("[Controller] executeCustomCode: Forwarding to compiler service for custom run...");
     const compilerServicePayload = { language, code, input };
-    const compilerRes = await fetch("http://localhost:8000/compiler/custom-in-run", { // NEW COMPILER SERVICE ENDPOINT
+    const compilerRes = await fetch("https://og-oj-compiler.onrender.com/compiler/custom-in-run", { // NEW COMPILER SERVICE ENDPOINT
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(compilerServicePayload),
