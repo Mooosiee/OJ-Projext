@@ -29,7 +29,7 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/backend/user/update/${currentUser._id}`, {
+      const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/update/${currentUser._id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -51,7 +51,7 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     setShowDelete(false);
     try {
-      const res = await fetch(`/backend/user/delete/${currentUser._id}`, {
+      const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/delete/${currentUser._id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -69,7 +69,7 @@ export default function Profile() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("/backend/auth/logout");
+      const res = await fetch("https://og-oj-backend.onrender.com/backend/auth/logout");
       const data = await res.json();
       if (data.success === false) {
         dispatch(DeleteUserFailure(data.message));
