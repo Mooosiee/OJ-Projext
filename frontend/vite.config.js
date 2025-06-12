@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/backend": {
-        target: "http://localhost:5000",
+        target: "https://og-oj-backend.onrender.com",
         secure: false,
       },
     },
