@@ -13,7 +13,7 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/backend/auth/signup", {
+      const res = await fetch("https://og-oj-backend.onrender.com/backend/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -30,16 +30,7 @@ export default function SignUp() {
       return;
     }
   };
-  // Assuming this is src/pages/SignUpPage.jsx or similar
-  // ... (imports for useState, Link, useNavigate, useDispatch, useSelector, Redux actions would be at the top) ...
-
-  // const [formData, setFormData] = useState({});
-  // const { loading, error } = useSelector((state) => state.user); // Assuming 'loading' and 'error' from user slice
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
-
-  // const handleChange = (e) => { /* ... your existing logic ... */ };
-  // const handleSubmit = async (e) => { /* ... your existing logic ... */ };
+  
 
   return (
     <div className="bg-background min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 text-text-primary">
