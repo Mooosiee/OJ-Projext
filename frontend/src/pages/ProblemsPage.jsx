@@ -8,6 +8,7 @@ const ProblemsPage = () => {
   const [selectedTag, setSelectedTag] = useState("ALL"); // This would be used to filter problems by tag
   const [error, setError] = useState(false); // This would be used to handle errors
   const [loading, setLoading] = useState(true); // This would be used to handle loading state
+  const isLoggedIn = !!localStorage.getItem("token"); // or use context
   useEffect(() => {
     const fetchProblems = async () => {
       try {
@@ -22,8 +23,8 @@ const ProblemsPage = () => {
         const data = await res.json();
         if (data.success === false) {
           setError(data.message);
-            setLoading(false);
-         return;
+          setLoading(false);
+          return;
         }
         setProblems(data); // data should be an array of problems
         // Assuming data is an array of problem objects
@@ -66,6 +67,15 @@ const ProblemsPage = () => {
       return DIFFICULTY_ORDER[b.difficulty] - DIFFICULTY_ORDER[a.difficulty];
     }
   });
+
+  const handleProblemClick = (problemId) => {
+    if (!isLoggedIn) {
+      alert("You need to login first to view the problem.");
+      return;
+    }
+    // Navigate to the problem
+    navigate(`/problems/${problemId}`);
+  };
   if (loading)
     return (
       <div className="bg-background min-h-screen flex items-center justify-center text-text-primary text-xl">
@@ -175,13 +185,11 @@ const ProblemsPage = () => {
                       {/* This index depends on pagination if you add it. For now, it's based on filtered list. */}
                       {idx + 1}
                     </td>
-                    <td className="px-6 py-4 font-medium text-text-primary hover:text-primary">
-                      <Link // Use Link component for navigation
-                        to={`/problems/${problem._id}`} // Corrected from /problems/ to /problem/
-                        className="hover:underline"
-                      >
-                        {problem.name}
-                      </Link>
+                    <td
+                      className="px-6 py-4 font-medium text-text-primary hover:text-primary hover:underline"
+                      onClick={() => handleProblemClick(problem._id)}
+                    >
+                      {problem.name}
                     </td>
                     <td className="px-6 py-4 capitalize">
                       <span

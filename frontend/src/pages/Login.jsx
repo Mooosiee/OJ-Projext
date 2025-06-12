@@ -49,7 +49,7 @@ export default function Login() {
       <div className="max-w-md w-full space-y-8 bg-surface p-8 md:p-10 rounded-xl shadow-2xl">
         <div>
           <h1 className="mt-6 text-center text-4xl font-bold tracking-tight text-primary">
-            Logo
+            OG-OJ
           </h1>
           {/* Optional: Add a subtitle like "Sign in to continue" */}
         </div>

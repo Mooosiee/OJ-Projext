@@ -46,7 +46,7 @@ export default function SignUp() {
       <div className="max-w-md w-full space-y-8 bg-surface p-8 md:p-10 rounded-xl shadow-2xl">
         <div>
           <h1 className="mt-6 text-center text-4xl font-bold tracking-tight text-primary">
-            Logo {/* Or YourOJName */}
+            OG-OJ 
           </h1>
           <h2 className="mt-2 text-center text-xl font-medium text-text-secondary">
             Create your account

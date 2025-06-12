@@ -20,7 +20,7 @@ export default function Header() {
             {currentUser ? (
               <img src = {currentUser.avatar} alt='profile'  className="h-8 w-8 rounded-full object-cover"/>
             ) : (
-            <li className=" hover:text-secondary">Log In</li>
+            <li className="font-bold hover:text-primary">Log In</li>
             )}
             </Link>
             
