@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use("/compiler",compilerRouter);
 app.use(cors({
-  origin: 'http://localhost:5000' // Only allow main backend
+  origin: 'https://og-oj-backend.onrender.com' // Only allow main backend
 }));
 
 
