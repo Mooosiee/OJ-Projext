@@ -34,7 +34,7 @@ export const submitCode = async (req, res, next) => {
         console.log("[Controller] submitCode: Payload to compiler service:", JSON.stringify(compilerServicePayload, (key, value) => key === 'code' ? value.substring(0, 100) + "..." : value, 2));
 
 
-        const compilerRes = await fetch("http://localhost:8000/compiler/run", {
+        const compilerRes = await fetch("https://og-oj-compiler.onrender.com/compiler/run", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
