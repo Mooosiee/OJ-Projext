@@ -27,7 +27,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/backend/auth/login", {
+      const res = await fetch("https://og-oj-backend.onrender.com/backend/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
