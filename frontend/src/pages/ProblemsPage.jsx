@@ -12,7 +12,7 @@ const ProblemsPage = () => {
     const fetchProblems = async () => {
       try {
         setError(false); // Reset error state before fetching
-        const res = await fetch("backend/problems/all", {
+        const res = await fetch("https://og-oj-backend.onrender.com/backend/problems/all", {
           method: "GET", //this does not need to be set, but it's good practice to specify it
           headers: {
             "Content-Type": "application/json",
