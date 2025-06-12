@@ -32,7 +32,7 @@ export default function SolveProblem() {
   useEffect(() => {
     const fetchProblem = async () => {
       try {
-        const res = await fetch(`/backend/problems/${id}`);
+        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/${id}`);
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || "Failed to fetch problem");
@@ -55,7 +55,7 @@ export default function SolveProblem() {
     setCustomOutput(""); // Clear custom customOarea when submitting officially
     setError("");
     try {
-      const res = await fetch("/backend/submissions", {
+      const res = await fetch("https://og-oj-backend.onrender.com/backend/submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -85,7 +85,7 @@ export default function SolveProblem() {
     setisLoadingCustomRun(true);
     setError("");
     try {
-      const res = await fetch("/backend/custom-in", {
+      const res = await fetch("https://og-oj-backend.onrender.com/backend/custom-in", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
