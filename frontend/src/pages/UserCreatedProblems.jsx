@@ -18,7 +18,10 @@ export default function UserCreatedProb() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/${user._id}/problems`);
+        const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/${user._id}/problems`,{
+           method: "GET",
+          credentials: "include"
+        });
         const data = await res.json();
 
         if (data.success === false) {
@@ -43,6 +46,7 @@ export default function UserCreatedProb() {
     try {
       const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/delete/${problemToDelete}`, {
         method: "DELETE",
+        credentials: "include"
       });
       const data = await res.json();
 
