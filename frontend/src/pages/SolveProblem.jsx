@@ -32,7 +32,10 @@ export default function SolveProblem() {
   useEffect(() => {
     const fetchProblem = async () => {
       try {
-        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/${id}`);
+        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/${id}`,{
+          method : "GET",
+          credentials: "include", 
+        });
         if (!res.ok) {
           const errorData = await res.json();
           throw new Error(errorData.message || "Failed to fetch problem");
@@ -93,7 +96,8 @@ export default function SolveProblem() {
           selectedLanguage, // will make it dynamic to support more langs
           code,
           input // This is the custom input from the textarea-not needed for submit button
-        })
+        }),
+        credentials: "include",
       });
 
       const data = await res.json();  // Expected: { output: "...", error: "..." 
