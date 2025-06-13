@@ -33,6 +33,7 @@ export default function Profile() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) {
@@ -53,6 +54,7 @@ export default function Profile() {
     try {
       const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/delete/${currentUser._id}`, {
         method: "DELETE",
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success === false) {
