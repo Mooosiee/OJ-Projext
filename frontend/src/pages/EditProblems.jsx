@@ -39,7 +39,10 @@ export default function EditProblem() {
       setIsLoading(true); // Start loading before fetch
       setError(null); // Clear previous errors
       try {
-        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/${problemId}`);
+        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/${problemId}`,{
+          method : "GET",
+          credentials: "include", 
+        });
         const data = await res.json(); // This is the problem object from backend
 
         console.log("[EditProblem useEffect] Data received from backend:", data);
@@ -156,7 +159,7 @@ export default function EditProblem() {
       delete payload.__v;
 
 
-      const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/update/${problemId}`, { // Corrected endpoint
+      const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/update/${problemId}`, { 
         method: "PUT", // Use PUT for updates
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
