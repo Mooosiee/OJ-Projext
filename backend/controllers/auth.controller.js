@@ -62,7 +62,12 @@ export const login = async (req, res,next) => {
       //send the token
       return res
         .status(200)
-        .cookie("token", token, {httpOnly:true})
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: true, // Required for HTTPS
+          sameSite: "None", // Required for cross-origin cookies
+          path: "/",   // ensure cookie is sent on all routes   
+          })
         .json(rest);
     } catch (error) {
       next(error);
@@ -72,7 +77,12 @@ export const login = async (req, res,next) => {
   export const Logout = async (req, res,next) => {
     try {
       //clear the cookie
-      res.clearCookie("token");
+      res.clearCookie("token",{
+      httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      path: "/"
+      });
       return res.status(200).json({ message: "You have successfully logged out!" });
     } catch (error) {
       next(error);
