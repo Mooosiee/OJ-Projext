@@ -13,7 +13,7 @@ A lightweight **Online Judge** system built with the MERN stack, designed to let
   - See all public problems and try solving them
 - 🧪 **Code Submission & Evaluation** — Users can:
   - Submit code in supported languages (Python, C++, Java)
-  - Get real-time verdicts like Accepted, Wrong Answer, or ⏳ Time Limit Exceeded
+  - Get real-time verdicts like Accepted, Wrong Answer, or Time Limit Exceeded
 - 🧾 **Submission History** — Users can view their past submissions in their profile
 - ⚙️ **Dockerized Execution** — Each submission is run securely inside a container
 - 🗃️ **MongoDB-based Backend** — Robust schema for users, problems, test cases, and solutions
