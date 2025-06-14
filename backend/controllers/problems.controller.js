@@ -17,17 +17,28 @@ export const createProblems = async (req, res, next) => {
 };
 export const getAllProblems = async (req, res, next) => {
   try {
-    const problems = await Problem.find().populate("userRef", "username");
-    res.status(200).json(problems);
+    const problems = await Problem.find()
+      .populate("userRef", "username")
+      .lean(); //Makes each document a plain JS object
+
+    const formattedProblems = problems.map((problem) => ({
+      id: problem._id,
+      name: problem.name,
+      difficulty: problem.difficulty,
+      tags: problem.tags,
+      createdAt: problem.createdAt,
+    }));
+
+    res.status(200).json(formattedProblems);
   } catch (error) {
     next(error);
   }
 };
 export const getAProblem = async (req, res, next) => {
   try {
-   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-  return next(errorHandler(400, "Invalid problem ID format"));
-}
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return next(errorHandler(400, "Invalid problem ID format"));
+    }
     const problem = await Problem.findById(req.params.id)
       .populate("userRef", "username")
       .lean();
@@ -43,7 +54,7 @@ export const getAProblem = async (req, res, next) => {
       constraints: problem.constraints,
       sampleInput: problem.sampleInput,
       sampleOutput: problem.sampleOutput,
-      testcases: problem.testcases,
+      userRef: problem.userRef,
       difficulty: problem.difficulty,
       tags: problem.tags,
     });
@@ -52,27 +63,23 @@ export const getAProblem = async (req, res, next) => {
   }
 };
 
-export const updateProblem = async (req,res,next) =>{
-try {
-   
+export const updateProblem = async (req, res, next) => {
+  try {
     const { problemId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(problemId)) {
       return next(errorHandler(400, "Invalid problem ID format"));
     }
 
-  
     const updatedProblem = await Problem.findByIdAndUpdate(
       problemId,
       req.body, // This contains the updated fields from frontend
       { new: true } // So Mongo returns the updated document
     );
 
-   
     if (!updatedProblem) {
       return next(errorHandler(404, "Problem not found"));
     }
 
-   
     res.status(200).json(updatedProblem);
   } catch (error) {
     next(error);
@@ -81,7 +88,7 @@ try {
 export const deleteProblem = async (req, res, next) => {
   try {
     const { problemId } = req.params;
-    
+
     if (!mongoose.Types.ObjectId.isValid(problemId)) {
       return next(errorHandler(400, "Invalid problem ID format"));
     }
@@ -92,7 +99,7 @@ export const deleteProblem = async (req, res, next) => {
       return next(errorHandler(404, "Problem not found"));
     }
 
-   res.status(200).json(deletedProblem);
+    res.status(200).json(deletedProblem);
   } catch (error) {
     next(error);
   }

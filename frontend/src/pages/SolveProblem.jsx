@@ -134,7 +134,8 @@ export default function SolveProblem() {
       <div className="flex-1 p-6 overflow-y-auto border-r border-border bg-surface shadow-lg"> {/* Surface bg for left panel, themed border */}
         <h1 className="text-3xl font-semibold text-primary mb-4">{problem.name}</h1>
         <p className="mt-2 whitespace-pre-wrap text-text-secondary leading-relaxed">{problem.description}</p>
-        
+        <p className="italic whitespace-pre-wrap text-text-secondary text-sm">
+          {problem.userRef?.username || "Unknown Author"}</p>
         <div className="flex flex-col mt-8 mb-4 gap-4">
           <div className="border border-border p-3 rounded-md bg-background">
             <h3 className="font-semibold text-text-primary mb-1">Input Format</h3>
