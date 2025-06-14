@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
 
 // Placeholder Icons (replace with actual SVGs or an icon library)
 const PuzzleIcon = () => <svg className="w-10 h-10 md:w-12 md:h-12 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"></path></svg>;
@@ -7,6 +8,7 @@ const CodeBracketsIcon = () => <svg className="w-10 h-10 md:w-12 md:h-12 text-pr
 
 
 export default function HomePage() {
+  const currentUser = useSelector((state) => state.user.user);
   const OJ_NAME = "OG-OJ"; 
 
   // Calculate the height available after accounting for your header.
@@ -37,12 +39,14 @@ export default function HomePage() {
           >
             Explore Problems
           </Link>
-          <Link
+          {!currentUser && (
+      <Link
             to="/signup" // Or /signin if user is not logged in
             className="w-full sm:w-auto bg-surface text-primary border-2 border-primary font-semibold px-8 py-3 md:px-10 md:py-4 rounded-lg shadow-lg hover:bg-border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-primary transition-transform transform hover:scale-105 text-base md:text-lg"
           >
             Get Started
           </Link>
+        )}
         </div>
 
         {/* Optional: A very brief features highlight if space allows and it's crucial */}
