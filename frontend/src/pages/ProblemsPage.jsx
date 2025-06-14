@@ -166,7 +166,7 @@ const ProblemsPage = () => {
               ) : (
                 filtered.map((problem, idx) => (
                   <tr
-                    key={problem._id}
+                    key={problem.id}
                     className="bg-surface border-b border-border hover:bg-background/50 transition-colors duration-150"
                     // onClick={() => navigate(`/problem/${problem._id}`)} // Make whole row clickable
                     // style={{ cursor: 'pointer' }}
@@ -177,7 +177,7 @@ const ProblemsPage = () => {
                     </td>
                     <td className="px-6 py-4 font-medium text-text-primary hover:text-primary">
                       <Link // Use Link component for navigation
-                        to={`/problems/${problem._id}`} 
+                        to={`/problems/${problem.id}`} 
                         className="hover:underline"
                       >
                         {problem.name}
