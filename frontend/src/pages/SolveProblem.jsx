@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 
 export default function SolveProblem() {
+  const currentUser = useSelector((state) => state.user.user);
   const { id } = useParams();
   const [selectedLanguage, setSelectedLanguage] = useState("cpp"); // State for language selection
   
@@ -50,8 +52,12 @@ export default function SolveProblem() {
 
     fetchProblem();
   }, [id]);
-
+  
   const handleSubmit = async () => {
+     if (!currentUser) {
+    alert("Login to submit code!");
+    return;
+  }
     setisLoadingSub(true);
     setSubVerdict("");
     setsubTestResult([]);
@@ -84,6 +90,10 @@ export default function SolveProblem() {
     }
   };
   const handleRun = async () => {
+     if (!currentUser) {
+    alert("Login to run code!");
+    return;
+  }
     setCustomOutput("");
     setisLoadingCustomRun(true);
     setError("");
