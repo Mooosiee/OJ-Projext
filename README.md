@@ -1,4 +1,4 @@
-# OG-OJ 🧠⚙️  
+# OG-OJ 
 A lightweight **Online Judge** system built with the MERN stack, designed to let users create, solve, and manage coding problems.
 
 🚀 [Live Site](https://og-oj-frontend.onrender.com/)
