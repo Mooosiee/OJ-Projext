@@ -55,6 +55,7 @@ export const getAProblem = async (req, res, next) => {
       sampleInput: problem.sampleInput,
       sampleOutput: problem.sampleOutput,
       userRef: problem.userRef,
+      testcases: problem.testcases,
       difficulty: problem.difficulty,
       tags: problem.tags,
     });
