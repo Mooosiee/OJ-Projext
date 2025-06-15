@@ -103,7 +103,7 @@ export default function SolveProblem() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           //problemId: id, - not needed for custom input
-          selectedLanguage, // will make it dynamic to support more langs
+          language : selectedLanguage, // will make it dynamic to support more langs
           code,
           input // This is the custom input from the textarea-not needed for submit button
         }),

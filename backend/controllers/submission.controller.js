@@ -24,7 +24,7 @@ export const submitCode = async (req, res, next) => {
         // console.log("[Controller] submitCode: Testcases being sent to compiler:", JSON.stringify(req.problem.testCases, null, 2)); // Uncomment to see full testcases, can be very verbose
 
         // Forward to compiler service
-        console.log("[Controller] submitCode: Attempting to send request to compiler service (http://localhost:8000/compiler/run)");
+        console.log("[Controller] submitCode: Attempting to send request to compiler service (https://og-oj-compiler.onrender.com/compiler/run)");
         const compilerServicePayload = {
             language,
             code,
