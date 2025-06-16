@@ -7,7 +7,7 @@ export default function SolveProblem() {
   const currentUser = useSelector((state) => state.user.user);
   const { id } = useParams();
   const [selectedLanguage, setSelectedLanguage] = useState("cpp"); // State for language selection
-  
+
   // States for "Submit Code" results
   const [subVerdict, setSubVerdict] = useState("");
   const [subTestResult, setsubTestResult] = useState([]);
@@ -92,6 +92,10 @@ export default function SolveProblem() {
   const handleRun = async () => {
      if (!currentUser) {
     alert("Login to run code!");
+    return;
+  }
+  if(!input){
+    alert("Provide input to run code!");
     return;
   }
     setCustomOutput("");
