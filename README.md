@@ -1,4 +1,4 @@
-# OG-OJ 🧠⚙️  
+# OG-OJ 
 A lightweight **Online Judge** system built with the MERN stack, designed to let users create, solve, and manage coding problems.
 
 🚀 [Live Site](https://og-oj-frontend.onrender.com/)
@@ -13,9 +13,10 @@ A lightweight **Online Judge** system built with the MERN stack, designed to let
   - See all public problems and try solving them
 - 🧪 **Code Submission & Evaluation** — Users can:
   - Submit code in supported languages (Python, C++, Java)
-  - Get real-time verdicts like Accepted, Wrong Answer, or Time Limit Exceeded
+  - Get real-time verdicts like ✅ Accepted, ❌ Wrong Answer, or ⏳ Time Limit Exceeded
 - 🧾 **Submission History** — Users can view their past submissions in their profile
 - ⚙️ **Dockerized Execution** — Each submission is run securely inside a container
+- ⏰ **Scheduled Cleanup** — A `node-cron` job periodically deletes temporary code files to free up server space
 - 🗃️ **MongoDB-based Backend** — Robust schema for users, problems, test cases, and solutions
 - 🌐 **Deployed via Render** — Live frontend and backend for easy access
 
@@ -29,6 +30,7 @@ A lightweight **Online Judge** system built with the MERN stack, designed to let
 - **Database:** MongoDB Atlas
 - **Code Runner:** Docker containers (for sandboxed execution)
 - **Deployment:** Render
+- **Scheduler:** node-cron (for automated file cleanup)
 - **Future Plan:** Contest support and global leaderboard
 
 ---
@@ -101,21 +103,22 @@ docker run -p 8000:8000 oj-compiler
 
 ## 🧪 API Overview (Core Endpoints)
 
-- `POST /signup` – Register a new user
-- `POST /login` – Log in and receive JWT
-- `POST /problems` – Create a new problem (user-specific)
-- `POST /submissions` – Submit code for evaluation
-- `GET /submissions` – Get your submission history
+- `POST /signup` – Register a new user  
+- `POST /login` – Log in and receive JWT  
+- `POST /problems` – Create a new problem (user-specific)  
+- `POST /submissions` – Submit code for evaluation  
+- `GET /submissions` – Get your submission history  
 
 📎 See full [API reference in HLD.pdf](./HLD.pdf)
 
 ---
 
-## Demo Video Soon
+## Demo Video 
+https://www.loom.com/share/folder/c20e05a15ef34d7e95fb8263757f12ef
 
 ---
 
-## Author
+## 🧑‍🎓 Author
 
 **Musfiraa Arif**  
 [GitHub](https://github.com/Mooosiee)
@@ -132,7 +135,7 @@ docker run -p 8000:8000 oj-compiler
 
 ---
 
-## Access Control Notes
+## 🛡️ Access Control Notes
 
 - Users can only edit or delete **problems they have created**
 - There are currently **no separate admin roles**
