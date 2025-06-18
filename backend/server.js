@@ -10,9 +10,11 @@ import submissionRouter from "./routes/submission.route.js";
 import customInputRouter from "./routes/customIn.route.js"
 dotenv.config();
 const app = express();
+const allowedOrigin = ["https://og-oj-frontend.onrender.com",'http://localhost:5173']
 app.use(
   cors({
-    origin: "https://og-oj-frontend.onrender.com", // put exact frontend Render URL
+    origin:allowedOrigin,
+     // put exact frontend Render URL
     credentials: true, // must be true if using cookies
   })
 );
