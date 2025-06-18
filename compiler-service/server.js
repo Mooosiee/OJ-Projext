@@ -19,4 +19,4 @@ app.listen(PORT,() => {
     console.log(`Server is running on PORT ${PORT}`);
 });
  // --- Start the scheduled cleanup tasks : After server starts listening---
-  startScheduledCleanup(); // <--- CALL THE FUNCTION
+  //startScheduledCleanup(); // <--- CALL THE FUNCTION
