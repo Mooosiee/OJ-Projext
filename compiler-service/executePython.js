@@ -7,32 +7,33 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const outputPath = path.join(__dirname, "outputs");
 
-// Create outputs directory if it doesn't exist
 if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-export const executePython = async (filePath, inputfilePath) => {
+export const executePython = async (filePath, inputFilePath) => {
+  return new Promise((resolve, reject) => {
+    const command = `python3 "${filePath}" < "${inputFilePath}"`;
 
-  console.log("[executePython] : Entered");
-  return new Promise((resolve) => {
-    const command = `python3 "${filePath}" < "${inputfilePath}"`;
-
-    exec(command, { timeout: 3000 }, (error, stdout, stderr) => {
+    exec(command, { timeout: 7000 }, (error, stdout, stderr) => {
       if (error) {
-        if (error.killed) {
-          return resolve({
-            stdout: "",
-            stderr: "Time Limit Exceeded",
+        if (error.killed || error.signal === "SIGTERM") {
+          return reject({
+            message: "Time Limit Exceeded",
+            stdout: stdout || "",
+            stderr: stderr || "",
             exitCode: error.code || 1,
             timedOut: true,
+            verdictHint: "Time Limit Exceeded",
           });
         }
-        return resolve({
-          stdout: "",
+        return reject({
+          message: "Runtime Error",
+          stdout: stdout || "",
           stderr: stderr || error.message,
           exitCode: error.code || 1,
           timedOut: false,
+          verdictHint: "Runtime Error",
         });
       }
 
@@ -41,6 +42,7 @@ export const executePython = async (filePath, inputfilePath) => {
         stderr: stderr?.trim() || "",
         exitCode: 0,
         timedOut: false,
+        verdictHint: "Executed Successfully",
       });
     });
   });

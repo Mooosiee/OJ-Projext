@@ -12,27 +12,31 @@ if (!fs.existsSync(outputPath)) {
 }
 
 export const executeJava = async (filePath, inputFilePath) => {
-  const jobId = path.basename(filePath).split(".")[0]; // e.g., MyClass
+  const jobId = path.basename(filePath).split(".")[0];
   const dirPath = path.dirname(filePath);
 
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const command = `javac "${filePath}" && java -cp "${dirPath}" ${jobId} < "${inputFilePath}"`;
 
-    exec(command, { timeout: 3000 }, (error, stdout, stderr) => {
+    exec(command, { timeout: 7000 }, (error, stdout, stderr) => {
       if (error) {
-        if (error.killed) {
-          return resolve({
-            stdout: "",
-            stderr: "Time Limit Exceeded",
+        if (error.killed || error.signal === "SIGTERM") {
+          return reject({
+            message: "Time Limit Exceeded",
+            stdout: stdout || "",
+            stderr: stderr || "",
             exitCode: error.code || 1,
             timedOut: true,
+            verdictHint: "Time Limit Exceeded",
           });
         }
-        return resolve({
-          stdout: "",
+        return reject({
+          message: "Compilation or Runtime Error",
+          stdout: stdout || "",
           stderr: stderr || error.message,
           exitCode: error.code || 1,
           timedOut: false,
+          verdictHint: "Runtime Error",
         });
       }
 
@@ -41,6 +45,7 @@ export const executeJava = async (filePath, inputFilePath) => {
         stderr: stderr?.trim() || "",
         exitCode: 0,
         timedOut: false,
+        verdictHint: "Executed Successfully",
       });
     });
   });
