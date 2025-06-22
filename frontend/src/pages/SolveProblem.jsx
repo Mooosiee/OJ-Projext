@@ -286,7 +286,7 @@ export default function SolveProblem() {
                     <span className={`${result.passed && !result.error ? "text-success" : "text-error"}`}>
                       {result.passed && !result.error
                         ? "Passed"
-                        : `Failed ${result.error ? `(${result.error})` : ''}`
+                        : "Failed"
                       }
                     </span>
                   </div>
