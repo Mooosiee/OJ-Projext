@@ -19,7 +19,7 @@ export const executeCpp = async (filePath, inputfilePath) => {
   return new Promise((resolve,reject) => {
     const command = `g++ "${filePath}" -o "${execPath}" && "${execPath}" < "${inputfilePath}"`;
 
-    exec(command, { timeout: 3000 }, (error, stdout, stderr) => {
+    exec(command, { timeout: 7000 }, (error, stdout, stderr) => {
       if (error) {
         // Time Limit Exceeded
         if (error.killed || error.signal === "SIGTERM") {
