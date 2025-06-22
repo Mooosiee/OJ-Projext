@@ -16,7 +16,7 @@ export const executeCpp = async (filePath, inputfilePath) => {
   const jobId = path.basename(filePath).split(".")[0];
   const execPath = path.join(outputPath, `${jobId}.exe`);
 
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     const command = `g++ "${filePath}" -o "${execPath}" && "${execPath}" < "${inputfilePath}"`;
 
     exec(command, { timeout: 7000 }, (error, stdout, stderr) => {
@@ -29,6 +29,7 @@ export const executeCpp = async (filePath, inputfilePath) => {
             stderr: stderr || "",
             exitCode: error.code || 1,
             timedOut: true,
+            verdictHint: "Time Limit Exceeded", // Added missing verdictHint
           });
         }
         // Runtime error or compilation failure
@@ -38,6 +39,7 @@ export const executeCpp = async (filePath, inputfilePath) => {
           stderr: stderr || error.message,
           exitCode: error.code || 1,
           timedOut: false,
+          verdictHint: "Runtime Error", // Added missing verdictHint
         });
       }
 
@@ -47,6 +49,7 @@ export const executeCpp = async (filePath, inputfilePath) => {
         stderr: stderr?.trim() || "",
         exitCode: 0,
         timedOut: false,
+        verdictHint: "Executed Successfully"
       });
     });
   });
