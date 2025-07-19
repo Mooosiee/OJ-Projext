@@ -14,7 +14,8 @@ const ProblemsPage = () => {
       try {
         setError(false); // Reset error state before fetching
         const apiUrl = import.meta.env.VITE_API_URL;
-        const res = await fetch(`${apiUrl}/backend/problems/all`, {
+        // ${apiUrl}
+        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/all`, {
           method: "GET", //this does not need to be set, but it's good practice to specify it
           headers: {
             "Content-Type": "application/json",
