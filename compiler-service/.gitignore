@@ -3,3 +3,5 @@ inputs
 outputs
 codes
 error_docker
+issues
+.env

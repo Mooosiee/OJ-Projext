@@ -7,7 +7,8 @@ import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import problemRouter from "./routes/problem.route.js";
 import submissionRouter from "./routes/submission.route.js";
-import customInputRouter from "./routes/customIn.route.js"
+import customInputRouter from "./routes/customIn.route.js";
+import AiReviewRouter from "./routes/AiReview.route.js"
 dotenv.config();
 const app = express();
 const allowedOrigin = ["https://og-oj-frontend.onrender.com",'http://localhost:5173']
@@ -29,7 +30,9 @@ app.use("/backend/user",userRouter);
 app.use("/backend/problems",problemRouter);
 // Add this before your submission route
 app.use('/backend/submissions',submissionRouter);
-app.use('/backend/custom-in',customInputRouter);
+app.use('/backend/custom-in', customInputRouter);
+//For Ai Review
+app.use('/backend/ai-review',AiReviewRouter);
 
 app.use((err,req,res,next) =>{
     const statusCode = err.statusCode || 500;

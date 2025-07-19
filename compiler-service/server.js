@@ -5,10 +5,15 @@ import {startScheduledCleanup} from "./scheduler.js"
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+const allowedOrigin = ['https://og-oj-backend.onrender.com','http://localhost:5000']
+app.use(
+  cors({
+    origin:allowedOrigin,
+    //Only allowed deployed and local backend
+  })
+);
 
-app.use(cors({
-  origin: 'https://og-oj-backend.onrender.com' // Only allow main backend
-}));
 
 app.use("/compiler",compilerRouter);
 
@@ -19,4 +24,4 @@ app.listen(PORT,() => {
     console.log(`Server is running on PORT ${PORT}`);
 });
  // --- Start the scheduled cleanup tasks : After server starts listening---
-  //startScheduledCleanup(); // <--- CALL THE FUNCTION
+startScheduledCleanup(); // <--- CALL THE FUNCTION

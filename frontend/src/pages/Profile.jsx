@@ -29,7 +29,8 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/update/${currentUser._id}`, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/user/update/${currentUser._id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -52,7 +53,8 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     setShowDelete(false);
     try {
-      const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/delete/${currentUser._id}`, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/user/delete/${currentUser._id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -71,7 +73,8 @@ export default function Profile() {
 
   const handleSignout = async () => {
     try {
-      const res = await fetch("https://og-oj-backend.onrender.com/backend/auth/logout");
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/auth/logout`);
       const data = await res.json();
       if (data.success === false) {
         dispatch(DeleteUserFailure(data.message));
@@ -99,7 +102,7 @@ export default function Profile() {
           <img
             src={currentUser.avatar}
             alt="profile"
-            className="h-28 w-28 rounded-full object-cover cursor-pointer self-center border-4 border-primary shadow-lg" // Added primary border to avatar
+            className="h-28 w-28 rounded-full object-cover cursor-pointer self-center  shadow-lg" // Added primary border to avatar
           />
           {/* Username Input */}
           <div>

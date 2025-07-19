@@ -1,6 +1,4 @@
 import { errorHandler } from "../utils/error.js";
-
-
 export const executeCustomCode = async (req, res, next) => {
   console.log("--------------------------------------------------");
   console.log("[Controller] executeCustomCode: Entered");
@@ -17,7 +15,9 @@ export const executeCustomCode = async (req, res, next) => {
 
     console.log("[Controller] executeCustomCode: Forwarding to compiler service for custom run...");
     const compilerServicePayload = { language, code, input };
-    const compilerRes = await fetch("https://og-oj-compiler.onrender.com/compiler/custom-in-run", { // NEW COMPILER SERVICE ENDPOINT
+    const compilerServiceUrl = process.env.COMPILER_SERVICE_URL;
+// Now use compilerServiceUrl for your API calls
+    const compilerRes = await fetch(`${compilerServiceUrl}/compiler/custom-in-run`, { // NEW COMPILER SERVICE ENDPOINT
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(compilerServicePayload),

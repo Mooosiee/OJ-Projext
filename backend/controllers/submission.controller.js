@@ -1,6 +1,5 @@
 // src/controllers/submission.controller.js
 import Submission from "../models/Submission.js";
-
 export const submitCode = async (req, res, next) => {
     console.log("--------------------------------------------------"); // Separator for clarity
     console.log("[Controller] submitCode: Entered");
@@ -33,8 +32,8 @@ export const submitCode = async (req, res, next) => {
         };
         console.log("[Controller] submitCode: Payload to compiler service:", JSON.stringify(compilerServicePayload, (key, value) => key === 'code' ? value.substring(0, 100) + "..." : value, 2));
 
-
-        const compilerRes = await fetch("https://og-oj-compiler.onrender.com/compiler/run", {
+         const compilerServiceUrl = process.env.COMPILER_SERVICE_URL;
+        const compilerRes = await fetch(`${compilerServiceUrl}/compiler/run`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

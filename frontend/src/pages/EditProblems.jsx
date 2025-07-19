@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-
+import Preloader from "../components/Preloader.jsx";
 export default function EditProblem() {
   const currentUser = useSelector((state) => state.user.user);
   const { problemId } = useParams();
@@ -39,7 +39,8 @@ export default function EditProblem() {
       setIsLoading(true); // Start loading before fetch
       setError(null); // Clear previous errors
       try {
-        const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/${problemId}`,{
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${apiUrl}/backend/problems/${problemId}`,{
           method : "GET",
           credentials: "include", 
         });
@@ -158,8 +159,8 @@ export default function EditProblem() {
       delete payload.updatedAt;
       delete payload.__v;
 
-
-      const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/update/${problemId}`, { 
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/problems/update/${problemId}`, { 
         method: "PUT", // Use PUT for updates
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -185,7 +186,7 @@ export default function EditProblem() {
   // console.log("formData.tags before return:", formData.tags); // This log is fine for checking render value
 
   if (isLoading && !formData.name) { // Show loading if fetching and name isn't populated yet
-    return <div className="bg-background min-h-screen flex items-center justify-center text-text-primary text-xl">Loading problem...</div>;
+    return (<Preloader/>) ;
   }
   
   // If there was an error during fetch and we don't have a problem name yet

@@ -54,8 +54,9 @@ export default function CreateProblem () {
         .map((line) => line.split("|").map((s) => s.trim()))
         .filter((pair) => pair.length === 2 && pair[0] && pair[1])
         .map(([input, output]) => ({ input, output }));
-
-      const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/create`, {
+      
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/problems/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

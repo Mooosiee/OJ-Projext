@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Preloader from "../components/Preloader.jsx";
 const ProblemsPage = () => {
   const [problems, setProblems] = useState([]); // This would be fetched from an API
   const [search, setSearch] = useState(""); // This would be used to filter problems by search term
@@ -12,7 +13,8 @@ const ProblemsPage = () => {
     const fetchProblems = async () => {
       try {
         setError(false); // Reset error state before fetching
-        const res = await fetch("https://og-oj-backend.onrender.com/backend/problems/all", {
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${apiUrl}/backend/problems/all`, {
           method: "GET", //this does not need to be set, but it's good practice to specify it
           headers: {
             "Content-Type": "application/json",
@@ -68,15 +70,13 @@ const ProblemsPage = () => {
   });
   if (loading)
     return (
-      <div className="bg-background min-h-screen flex items-center justify-center text-text-primary text-xl">
-        Loading Problems...
-      </div>
+      <Preloader/>
     );
   if (error) return <div className="p-4 text-red-500">{error}</div>;
 
   return (
-    <div className="bg-background min-h-screen text-text-primary py-8 px-4 md:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <main className=" bg-background min-h-screen text-text-primary py-8 px-4 md:px-6 lg:px-8">
+      <div className="mt-10 max-w-5xl mx-auto">
         {" "}
         {/* Container for content */}
         <h1 className="text-4xl font-bold mb-8 text-primary text-center md:text-left">
@@ -112,7 +112,7 @@ const ProblemsPage = () => {
             placeholder="Search problems ..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-grow bg-background border border-border text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-3 placeholder-text-secondary"
+            className="flex-grow bg-background border border-border p-3 text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full  placeholder-text-secondary"
           />
           <div className="flex items-center gap-2">
             <label
@@ -215,7 +215,7 @@ const ProblemsPage = () => {
         </div>
         {/* Optional: Add Pagination controls here if you have many problems */}
       </div>
-    </div>
+    </main>
   );
 };
 

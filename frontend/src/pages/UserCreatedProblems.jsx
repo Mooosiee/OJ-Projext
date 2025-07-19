@@ -18,7 +18,8 @@ export default function UserCreatedProb() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/${user._id}/problems`,{
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${apiUrl}/backend/user/${user._id}/problems`,{
            method: "GET",
           credentials: "include"
         });
@@ -44,7 +45,8 @@ export default function UserCreatedProb() {
     if (!problemToDelete) return;
 
     try {
-      const res = await fetch(`https://og-oj-backend.onrender.com/backend/problems/delete/${problemToDelete}`, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/problems/delete/${problemToDelete}`, {
         method: "DELETE",
         credentials: "include"
       });

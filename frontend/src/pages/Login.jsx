@@ -27,7 +27,8 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("https://og-oj-backend.onrender.com/backend/auth/login", {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${apiUrl}/backend/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",  

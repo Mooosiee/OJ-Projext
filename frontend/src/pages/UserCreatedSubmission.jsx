@@ -13,7 +13,8 @@ export default function MySubmissions() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`https://og-oj-backend.onrender.com/backend/user/${user._id}/submissions`,{
+        const apiUrl = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${apiUrl}/backend/user/${user._id}/submissions`,{
           method : "GET",
           credentials: "include", 
         });
