@@ -26,8 +26,8 @@ export default function HomePage() {
        // Ensure it takes at least the remaining viewport height
     >
       <section className="mt-14 max-w-3xl"> {/* Limiting width for better readability */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
-          Welcome to <span className="text-primary">OG-OJ</span>!
+        <h1 className="font-playwrite text-lg sm:text-xl md:text-2xl lg:text-6xl font-extrabold leading-tight">
+          Welcome to OG-OJ!
         </h1>
         <p className="mt-4 md:mt-6 text-lg sm:text-xl md:text-2xl text-text-secondary max-w-xl mx-auto">
           The ultimate platform to hone your coding skills, tackle challenging algorithmic problems, and prepare for technical interviews.
@@ -62,6 +62,9 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+      </section>
+      <section>
+        
       </section>
       
       {/* Footer is intentionally omitted to keep it single-screen. 

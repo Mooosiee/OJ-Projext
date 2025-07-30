@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SigninSuccess, SignInFailure } from "../redux/userSlice.js";
+import { useAuth0 } from "@auth0/auth0-react";
 // useDispatch is a hook that gives you access to the dispatch function from the Redux store
 // it allows you to dispatch actions to the store
 //what is react-redux?
@@ -18,6 +19,7 @@ export default function Login() {
   const { error } = useSelector((state) => state.user); // Access error from Redux store
   const navigate = useNavigate();
   const dispatch = useDispatch(); // Initialize the dispatch function from Redux
+  const { loginWithRedirect } = useAuth0();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -31,7 +33,7 @@ export default function Login() {
       const res = await fetch(`${apiUrl}/backend/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",  
+        credentials: "include",
         body: JSON.stringify(formData),
       });
       const data = await res.json();
@@ -102,7 +104,9 @@ export default function Login() {
               <p
                 className="font-medium text-secondary hover:text-cyan-400 transition cursor-pointer hover:underline"
                 onClick={() =>
-                  alert("Forgot password clicked - did not implement functionality yet!.")
+                  alert(
+                    "Forgot password clicked - did not implement functionality yet!."
+                  )
                 } // An alert for now
               >
                 Forgot password?
@@ -118,6 +122,16 @@ export default function Login() {
               Sign In
             </button>
           </div>
+          {/* Auth0 Login Button */}
+      <div className="mt-4">
+        <button
+          onClick={() => loginWithRedirect()}
+          type="button"
+          className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 text-sm font-semibold rounded-lg text-gray-800 bg-white hover:bg-gray-100 shadow-sm transition duration-150 ease-in-out"
+        >
+          Sign in with Auth0
+        </button>
+      </div>
         </form>
 
         {error && ( // Display error from Redux store

@@ -1,9 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+*{
+    box-sizing: border-box;
+}
 body{
     /* black */
-    background-color: #181A20;
+    background-color: black;
 }
 
 @keyframes preloader-line {

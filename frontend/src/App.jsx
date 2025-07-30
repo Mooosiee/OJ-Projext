@@ -10,7 +10,7 @@ import UserCreatedProb from "./pages/UserCreatedProblems.jsx";
 import UserCreatedSub from "./pages/UserCreatedSubmission.jsx";
 import EditProblem from "./pages/EditProblems.jsx"
 // import ForgotPassword from './pages/ForgotPass.jsx';
-import Header from "./components/Header";
+import Header from "./components/Header.jsx";
 export default function App() {
   return (
     <BrowserRouter>

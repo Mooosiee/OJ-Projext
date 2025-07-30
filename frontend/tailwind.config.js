@@ -9,6 +9,8 @@ export default {
       fontFamily: {
         palanquin: ['Palanquin', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
+        playwrite: ["Playwrite AU QLD", 'cursive'], 
+        comfortaa: ["Comfortaa","cursive"],
       },
       colors: {
         headerbg: "#282828",
