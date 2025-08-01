@@ -1,7 +1,12 @@
 # OG-OJ 
 A lightweight **Online Judge** system built with the MERN stack, designed to let users create, solve, and manage coding problems.
 
-🚀 [Live Site](https://og-oj-frontend.onrender.com/)
+---
+
+[Live Site](https://og-oj-frontend.onrender.com/)
+
+[Demo Video](https://www.loom.com/share/folder/c20e05a15ef34d7e95fb8263757f12ef)
+
 
 ---
 
@@ -110,11 +115,6 @@ docker run -p 8000:8000 oj-compiler
 - `GET /submissions` – Get your submission history  
 
 📎 See full [API reference in HLD.pdf](./HLD.pdf)
-
----
-
-## Demo Video 
-https://www.loom.com/share/folder/c20e05a15ef34d7e95fb8263757f12ef
 
 ---
 
