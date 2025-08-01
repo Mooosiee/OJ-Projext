@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import Preloader from "../components/Preloader";
 import ReactMarkdown from 'react-markdown';
-import { GradientBackground } from '../components/GradientBackground'; // Assuming you have this component
 
 // Placeholder Icons for Verdicts
 const CheckCircleIcon = () => (
