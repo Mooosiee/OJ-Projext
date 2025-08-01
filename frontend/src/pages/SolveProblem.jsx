@@ -3,40 +3,47 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import Preloader from "../components/Preloader";
-// react-markdown lets you safely and easily turn Markdown into React-rendered content in your React apps.
 import ReactMarkdown from 'react-markdown';
+import { GradientBackground } from '../components/GradientBackground'; // Assuming you have this component
+
+// Placeholder Icons for Verdicts
+const CheckCircleIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline-block" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+);
+
+const XCircleIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline-block" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+    </svg>
+);
+
 
 export default function SolveProblem() {
   const currentUser = useSelector((state) => state.user.user);
   const { id } = useParams();
-  const [selectedLanguage, setSelectedLanguage] = useState("cpp"); // State for language selection
+  const [selectedLanguage, setSelectedLanguage] = useState("cpp");
   const [isLoading, setIsLoading] = useState(true);
-  // States for "Submit Code" results
   const [subVerdict, setSubVerdict] = useState("");
   const [subTestResult, setsubTestResult] = useState([]);
   const [error, setError] = useState("");
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState("");
-  // State for "Run Code"
-  const [input, setInput] = useState(""); // This is for the custom input textarea
-  // State for "Run Code" (custom input) results
+  const [input, setInput] = useState("");
   const [customOutput, setCustomOutput] = useState("");
-  // Loading states
   const [isLoadingSub, setisLoadingSub] = useState(false);
-  //For AI Review Button to be visible
   const [Submitted, setSubmitted] = useState(false);
-  //For AI Review View 
   const [isLoadingAIReview, setisLoadingAIReview] = useState(false);
   const [AIReview, setAIReview] = useState("");
   const [showReviewModal, setShowReviewModal] = useState(false);
-  //for "Run Code" button
-  const [isLoadingCustomRun, setisLoadingCustomRun] = useState(false); 
+  const [isLoadingCustomRun, setisLoadingCustomRun] = useState(false);
 
   useEffect(() => {
     const templates = {
       cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code goes here\n    return 0;\n}`,
       py: `# Your Python code goes here\nprint("Hello from Python!")`,
-      java: `// Your Java code goes here\n// Ensure your class name is Main if submitting to a typical OJ system\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello from Java!");\n    }\n}`,
+      java: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello from Java!");\n    }\n}`,
     };
     setCode(templates[selectedLanguage]);
   }, [selectedLanguage]);
@@ -49,71 +56,48 @@ export default function SolveProblem() {
           method: "GET",
           credentials: "include",
         });
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Failed to fetch problem");
-        }
         const data = await res.json();
+        if (!res.ok) throw new Error(data.message);
         setProblem(data);
-        setIsLoading(false);
       } catch (error) {
-        console.error("Fetch error:", error.response?.data || error.message);
         setProblem({ error: "Failed to load problem" });
+      } finally {
         setIsLoading(false);
       }
     };
-
     fetchProblem();
   }, [id]);
 
-  const handleSubmit = async () => {
-    if (!currentUser) {
-      alert("Login to submit code!");
-      return;
-    }
+    const handleSubmit = async () => {
+    if (!currentUser) return alert("Login to submit code!");
     setisLoadingSub(true);
     setSubVerdict("");
     setsubTestResult([]);
-    setCustomOutput(""); // Clear custom customOarea when submitting officially
+    setCustomOutput("");
     setError("");
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const res = await fetch(`${apiUrl}/backend/submissions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          language: selectedLanguage,
-          problemId: id,
-          code,
-        }),
+        body: JSON.stringify({ language: selectedLanguage, problemId: id, code }),
         credentials: "include",
       });
-
-      const data = await res.json(); // Expected: { verdict, testResults,
-      //  customO(customOutput from compiler, should be null/ignored here) }
-      console.log(data);
+      const data = await res.json();
       setSubVerdict(data.finalVerdict || "Verdict not available");
-      if (data.testResults) {
-        setsubTestResult(data.testResults);
-      }
+      if (data.testResults) setsubTestResult(data.testResults);
       setSubmitted(true);
     } catch (error) {
-      setError(error.response?.data?.error || "Error running code");
+      setError("Error running code");
       setSubVerdict("Error");
     } finally {
-      //Is used to execute code regardless of whether an exception was raised or not in the try block.
       setisLoadingSub(false);
     }
   };
+
   const handleRun = async () => {
-    if (!currentUser) {
-      alert("Login to run code!");
-      return;
-    }
-    if (!input) {
-      alert("Provide input to run code!");
-      return;
-    }
+    if (!currentUser) return alert("Login to run code!");
+    if (!input) return alert("Provide input to run code!");
     setCustomOutput("");
     setisLoadingCustomRun(true);
     setError("");
@@ -122,31 +106,20 @@ export default function SolveProblem() {
       const res = await fetch(`${apiUrl}/backend/custom-in`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          //problemId: id, - not needed for custom input
-          language: selectedLanguage, // will make it dynamic to support more langs
-          code,
-          input, // This is the custom input from the textarea-not needed for submit button
-        }),
+        body: JSON.stringify({ language: selectedLanguage, code, input }),
         credentials: "include",
       });
-
-      const data = await res.json(); // Expected: { output: "...", error: "..."
-      if (data.success === false) {
-        setCustomOutput(data.message);
-        return;
-      }
+      const data = await res.json();
       setCustomOutput(data.output);
     } catch (error) {
-      setError(error.response?.data?.error || "Error running code");
+      setError("Error running code");
     } finally {
       setisLoadingCustomRun(false);
     }
   };
-  
-  const handleReview = async() => {
+
+  const handleReview = async () => {
     setisLoadingAIReview(true);
-    setError("");
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const res = await fetch(`${apiUrl}/backend/ai-review`, {
@@ -155,293 +128,156 @@ export default function SolveProblem() {
         body: JSON.stringify({ code })
       });
       const reviewData = await res.json();
-
-      setAIReview(reviewData.review || "No Review Recieved");
-      console.log(reviewData);
-      setisLoadingAIReview(false);
+      setAIReview(reviewData.review || "No Review Received");
       setShowReviewModal(true);
     } catch (error) {
-      setError(error.response?.data?.error || "Error reviewing code");
+      setError("Error reviewing code");
+    } finally {
       setisLoadingAIReview(false);
     }
-
   };
+
   if (isLoading) return <Preloader />;
-  if (problem?.error)
-    return (
-      <div className="bg-background min-h-screen flex items-center justify-center text-error text-xl p-6">
-        Error: {problem.error}
-      </div>
-    );
+  if (problem?.error) return <div className="bg-background min-h-screen flex items-center justify-center text-error text-xl p-6">Error: {problem.error}</div>;
 
   return (
-    <div className=" flex h-screen pt-2 bg-background text-text-primary">
-      {" "}
-      {/* Main page background and text */}
-      {/* Left Side - Problem Description */}
-      <div className="flex-1 p-6 overflow-y-auto border-r border-border bg-surface shadow-lg">
-        {" "}
-        {/* Surface bg for left panel, themed border */}
-        <h1 className="text-3xl font-semibold text-primary mb-4">
-          {problem.name}
-        </h1>
-        <p className="mt-2 whitespace-pre-wrap text-text-secondary leading-relaxed mb-3">
-          {problem.description}
-        </p>
-        <p className="italic whitespace-pre-wrap text-text-secondary text-sm ">
-          Author : {problem.userRef?.username || "Unknow Author"}
-        </p>
-        <div className="flex flex-col mt-8 mb-4 gap-4">
-          <div className="border border-border p-3 rounded-md bg-background">
-            <h3 className="font-semibold text-text-primary mb-1">
-              Input Format
-            </h3>
-            <pre className="italic whitespace-pre-wrap text-text-secondary text-sm">
-              {problem.inputFormat}
-            </pre>
-          </div>
-          <div className="border border-border p-3 rounded-md bg-background">
-            <h3 className="font-semibold text-text-primary mb-1">
-              Output Format
-            </h3>
-            <pre className="italic whitespace-pre-wrap text-text-secondary text-sm">
-              {problem.outputFormat}
-            </pre>
-          </div>
-        </div>
-        <div className="border border-border p-3 rounded-md bg-background mb-4">
-          <h3 className="font-semibold text-text-primary mb-1">Constraints</h3>
-          <pre className="whitespace-pre-wrap text-text-secondary text-sm">
-            {problem.constraints}
-          </pre>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="border border-border p-3 rounded-md bg-background">
-            <h3 className="font-semibold text-text-primary mb-1">
-              Sample Input
-            </h3>
-            <pre className="whitespace-pre-wrap text-text-secondary text-sm">
-              {problem.sampleInput}
-            </pre>
-          </div>
-          <div className="border border-border p-3 rounded-md bg-background">
-            <h3 className="font-semibold text-text-primary mb-1">
-              Sample Output
-            </h3>
-            <pre className="whitespace-pre-wrap text-text-secondary text-sm">
-              {problem.sampleOutput}
-            </pre>
-          </div>
-        </div>
-      </div>
-      {/* Right Side - Editor and UI */}
-      <div className="mx-2 flex-1 flex flex-col max-w-[50%] bg-surface p-2 shadow-lg rounded-lg">
-        {" "}
-        {/* Surface bg for right panel */}
-        {/* Language Selector Placeholder + Buttons */}
-        <div className="mb-2 flex justify-between items-center">
-          <select
-            id="language-select"
-            value={selectedLanguage}
-            onChange={(e) => setSelectedLanguage(e.target.value)}
-            className="bg-background text-text-primary text-sm rounded-lg focus:outline-none hover:bg-gray-700  p-2.5"
-            disabled={isLoadingSub || isLoadingCustomRun}
-          >
-            <option value="cpp">C++</option>
-            <option value="py">Python</option>
-            <option value="java">Java</option>
-          </select>
-          {/* Buttons */}
-          <div className="space-x-3">
-            <button
-              onClick={handleRun}
-              disabled={isLoadingSub || isLoadingCustomRun}
-              className={`py-2 px-3 text-white border-none rounded-lg cursor-pointer transition duration-150 ease-in-out font-medium
-                            ${
-                              isLoadingCustomRun
-                                ? "bg-gray-700"
-                                : "bg-gray-700 hover:bg-opacity-80 focus:ring-2 focus:ring-offset-1 focus:ring-offset-surface focus:ring-gray-500"
-                            }`}
-              title="Run your code with the custom input below (does not submit)"
-            >
-              {isLoadingCustomRun ? "Running..." : "Run"}
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={isLoadingSub || isLoadingCustomRun}
-              className={`py-2 px-3 text-white border-none rounded-lg cursor-pointer transition duration-150 ease-in-out font-medium
-                          ${
-                            isLoadingSub
-                              ? "bg-accent"
-                              : "bg-accent focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-white/20"
-                          }`}
-              title="Submit your code for official evaluation against all test cases"
-            >
-              {isLoadingSub ? "Submitting..." : "Submit"}
-            </button>
-            <button
-              onClick={handleReview}
-              disabled={isLoadingSub || isLoadingCustomRun}
-              className={`${
-                Submitted
-                  ? "py-2 px-3 text-white border-none rounded-lg cursor-pointer transition duration-150 ease-in-out font-medium bg-primary "
-                  : "hidden"
-              }`}
-              title="Submit your code for official evaluation against all test cases"
-            >
-              { isLoadingAIReview ? "Reviewing...":"AI Review"}
-            </button>
-          </div>
-        </div>
-        <Editor
-          height="35vh"
-          defaultLanguage="cpp" // This will be overridden by 'language' prop if you add language state
-          language={selectedLanguage} // Example if you add language selection state
-          defaultValue={`#include <iostream>\nusing namespace std;\n\nint main() {\n    // your code goes here\n    return 0;\n}`}
-          value={code}
-          onChange={(value) => setCode(value || "")}
-          theme="vs-dark" // vs-dark is already good for dark themes
-          options={{
-            minimap: { enabled: false },
-            fontSize: 14, // Slightly larger font
-            wordWrap: "on", // Enable word wrap
-            scrollBeyondLastLine: false,
-          }}
-        />
-        <div className="my-2">
-          {" "}
-          {/* Consistent margin */}
-          <label
-            htmlFor="custom-input-area"
-            className="block mb-1 text-sm font-medium text-text-secondary"
-          >
-            Custom Input:
-          </label>
-          <textarea
-            id="custom-input-area"
-            rows={2} // Increased rows slightly
-            className="w-full bg-background border border-border text-text-primary p-1.5 rounded-lg text-sm focus:ring-primary focus:border-primary placeholder-text-secondary"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Enter custom input..."
-            disabled={isLoadingSub || isLoadingCustomRun}
-          />
-        </div>
-        {/* Results Area */}
-        <div
-          className="mt-auto flex flex-col overflow-y-auto pt-4 border-t border-border"
-          style={{ flexGrow: 1 }}
-        >
-          {" "}
-          {/* Added top border */}
-          {/* Display Submission Verdict */}
-          {subVerdict && (
-            <div
-              className={`py-2.5 px-4 mb-3 rounded-lg text-lg font-semibold text-white text-center shadow
-                            ${
-                              subVerdict === "Accepted"
-                                ? "bg-success" // Use theme color
-                                : subVerdict.toLowerCase().includes("error") ||
-                                  subVerdict === "Verdict not available" ||
-                                  subVerdict === "N/A"
-                                ? "bg-warning text-background" // Use theme color
-                                : "bg-error" // Use theme color (For Wrong Answer, TLE, MLE, etc.)
-                            }`}
-            >
-              Verdict: {subVerdict}{" "}
-              {/* Removed "Verdict: " prefix as it's clear from context */}
-            </div>
-          )}
-          {/* Display General Submission Error if any, and if not already part of verdict */}
-          {error &&
-            !subVerdict.toLowerCase().includes("error") && ( // 'error' is your general error state
-              <div className="bg-error/20 text-error p-3 mb-3 rounded-lg text-sm border border-error">
-                {" "}
-                {/* Subtle error bg */}
-                {/* strong tag : tells browsers, screen readers, and search engines that this text is important. */}
-                <strong>Error:</strong> {error}
-              </div>
-            )}
-          {/* Display Output from Custom Run */}
-          {customOutput && (
-            <div className="mb-4">
-              <h3 className="text-text-primary mb-1 text-sm font-medium">
-                Output (from Custom Input):
-              </h3>
-              <pre className="bg-background border border-border text-green-400 p-3 text-xs min-h-[60px] whitespace-pre-wrap rounded-md shadow-sm">
-                {customOutput}
-              </pre>
-            </div>
-          )}
-          {/* Display Detailed Test Results from Submission */}
-          {subTestResult.length > 0 && (
-            <div className="mb-2">
-              <h3 className="text-text-primary mb-2 text-sm font-medium">
-                Test Case Results:
-              </h3>
-              {subTestResult.map((result, index) => (
-                <div
-                  key={index}
-                  className={`p-3 mb-2 rounded-md text-xs shadow-sm border-l-4
-                                ${
-                                  result.passed && !result.error
-                                    ? "bg-green-500/10 border-success"
-                                    : "bg-red-500/10 border-error"
-                                }`}
-                >
-                  <div className="text-text-primary font-semibold mb-1">
-                    Test Case {index + 1}:{" "}
-                    <span
-                      className={`${
-                        result.passed && !result.error
-                          ? "text-success"
-                          : "text-error"
-                      }`}
-                    >
-                      {result.passed && !result.error ? "Passed" : "Failed"}
-                    </span>
-                  </div>
-                  {(!result.passed || result.error) && (
-                    <div className="mt-1.5 text-text-secondary space-y-1 font-mono text-[11px] leading-relaxed">
-                      {" "}
-                      {/* Smaller font for details */}
-                      <div>
-                        <span className="text-gray-500">Input: </span>{" "}
-                        <pre className="inline bg-background/50 p-1 rounded">
-                          {result.input}
-                        </pre>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Expected: </span>{" "}
-                        <pre className="inline bg-background/50 p-1 rounded">
-                          {result.expected}
-                        </pre>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Actual: </span>{" "}
-                        <pre className="inline bg-background/50 p-1 rounded">
-                          {result.actual}
-                        </pre>
-                      </div>
+    <div className="min-h-screen bg-gradient-to-b from-primary-ii/90 via-black to-black text-text-primary pt-16">
+        <div className="flex flex-col lg:flex-row gap-4 px-4 sm:px-6 lg:px-8">
+            {/* Left - Description */}
+            <div className="lg:w-1/2 bg-black/30 backdrop-blur-xl p-6 rounded-xl shadow-lg">
+                <h1 className="font-playwrite text-2xl sm:text-3xl font-bold text-purple-400 mb-4">{problem.name}</h1>
+                <p className="whitespace-pre-wrap text-text-secondary leading-relaxed mb-4">{problem.description}</p>
+                <p className="italic text-sm text-text-secondary mb-6">Author: {problem.userRef?.username || "Unknown Author"}</p>
+
+                {["inputFormat", "outputFormat", "constraints"].map((field) => (
+                    <div key={field} className="mt-4 bg-white/5 p-4 rounded-lg">
+                        <h3 className="font-semibold text-white mb-2 capitalize">{field.replace("Format", " Format")}</h3>
+                        <pre className="whitespace-pre-wrap text-sm text-text-secondary font-mono">{problem[field]}</pre>
                     </div>
-                  )}
+                ))}
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    {["sampleInput", "sampleOutput"].map((field) => (
+                        <div key={field} className="bg-white/5 p-4 rounded-lg">
+                            <h3 className="font-semibold text-white mb-2 capitalize">{field.replace("sample", "Sample ")}</h3>
+                            <pre className="whitespace-pre-wrap text-sm text-text-secondary font-mono">{problem[field]}</pre>
+                        </div>
+                    ))}
                 </div>
-              ))}
             </div>
-          )}
+
+            {/* Right - Code + Run + Output */}
+            <div className="lg:w-1/2 flex flex-col gap-4">
+                <div className="bg-black/30 backdrop-blur-xl p-4 rounded-xl shadow-lg">
+                    <div className="flex justify-between items-center mb-4">
+                        <select 
+                            value={selectedLanguage} 
+                            onChange={(e) => setSelectedLanguage(e.target.value)} 
+                            className="bg-black/50 text-white font-semibold px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        >
+                            <option value="cpp">C++</option>
+                            <option value="py">Python</option>
+                            <option value="java">Java</option>
+                        </select>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={handleRun} 
+                                disabled={isLoadingSub || isLoadingCustomRun} 
+                                className="bg-white/10 text-white font-semibold px-6 py-2 rounded-lg hover:bg-purple-500/50 transition-colors disabled:opacity-50"
+                            >
+                                {isLoadingCustomRun ? "Running..." : "Run"}
+                            </button>
+                            <button 
+                                onClick={handleSubmit} 
+                                disabled={isLoadingSub || isLoadingCustomRun} 
+                                className="bg-purple-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-purple-500 transition-colors disabled:opacity-50"
+                            >
+                                {isLoadingSub ? "Submitting..." : "Submit"}
+                            </button>
+                        </div>
+                    </div>
+                    <Editor
+                        height="40vh"
+                        language={selectedLanguage}
+                        value={code}
+                        onChange={(v) => setCode(v || "")}
+                        theme="vs-dark"
+                        options={{ minimap: { enabled: false }, fontSize: 14, wordWrap: "on", scrollBeyondLastLine: false, background: "#00000000" }}
+                    />
+                </div>
+                
+                <div className="bg-black/30 backdrop-blur-xl p-4 rounded-xl shadow-lg flex-grow">
+                     <label className="block text-sm font-semibold text-text-secondary mb-2">Custom Input:</label>
+                    <textarea 
+                        rows={3} 
+                        className="w-full bg-white/5 text-white p-2 rounded-lg border border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
+                        value={input} 
+                        onChange={(e) => setInput(e.target.value)} 
+                    />
+
+                    {subVerdict && (
+                        <div className={`mt-4 p-3 text-center text-white font-bold rounded-lg ${subVerdict === "Accepted" ? "bg-green-500/80" : "bg-red-500/80"}`}>
+                           {subVerdict === "Accepted" ? <CheckCircleIcon/> : <XCircleIcon/>} Verdict: {subVerdict}
+                        </div>
+                    )}
+
+                    {error && !subVerdict.toLowerCase().includes("error") && (
+                        <div className="bg-red-500/20 text-red-300 p-3 mt-4 rounded-lg border border-red-500/50 text-sm">
+                            <strong>Error:</strong> {error}
+                        </div>
+                    )}
+                    
+                    {customOutput && (
+                        <div className="mt-4">
+                            <h3 className="text-sm font-semibold text-text-secondary mb-2">Output (Custom Input):</h3>
+                            <pre className="bg-white/5 text-green-400 border border-transparent p-3 rounded-lg whitespace-pre-wrap font-mono">{customOutput}</pre>
+                        </div>
+                    )}
+
+                    {subTestResult.length > 0 && (
+                        <div className="mt-4 space-y-2">
+                             {subTestResult.map((res, i) => (
+                                <div key={i} className={`p-3 rounded-lg border-l-4 ${res.passed && !res.error ? "bg-green-500/10 border-green-500" : "bg-red-500/10 border-red-500"}`}>
+                                    <div className="text-sm font-semibold flex justify-between">
+                                        <span>Test Case {i + 1}</span>
+                                        <span className={res.passed && !res.error ? "text-green-400" : "text-red-400"}>
+                                            {res.passed ? "Passed" : "Failed"}
+                                        </span>
+                                    </div>
+                                    {(!res.passed || res.error) && (
+                                      <div className="text-xs text-text-secondary mt-2 space-y-1 font-mono">
+                                          <div><span className="text-gray-400">Input: </span> <pre className="inline bg-black/20 p-1 rounded">{res.input}</pre></div>
+                                          <div><span className="text-gray-400">Expected: </span> <pre className="inline bg-black/20 p-1 rounded">{res.expected}</pre></div>
+                                          <div><span className="text-gray-400">Actual: </span> <pre className="inline bg-black/20 p-1 rounded">{res.actual}</pre></div>
+                                      </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {Submitted && (
+                      <div className="mt-4 text-center">
+                        <button onClick={handleReview} className="bg-white/10 text-purple-300 font-semibold px-6 py-2 rounded-lg hover:bg-purple-500/50 hover:text-white transition-colors">
+                          {isLoadingAIReview ? "Reviewing..." : "Get AI Review"}
+                        </button>
+                      </div>
+                    )}
+                </div>
+            </div>
         </div>
-      </div>
-      {/*Display AI Code Review*/}
-      { showReviewModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 ">
-          <div className="bg-background/90 p-6 rounded-lg shadow-lg w-2/4 max-h-[85%] overflow-y-auto">
-            <button onClick={() => {setShowReviewModal(false)}} className="absolute top-1 right-3 font-semibold text-4xl">x</button>
-            <strong>AI Code Review:</strong>
-            <ReactMarkdown>{AIReview}</ReactMarkdown>
-          </div>
-          
-        </div>
-      )}
+
+        {showReviewModal && (
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div className="bg-gradient-to-br from-gray-900 to-black border border-purple-500/30 p-6 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
+                    <button onClick={() => setShowReviewModal(false)} className="absolute top-4 right-4 text-3xl font-bold text-white/50 hover:text-white transition-colors">×</button>
+                    <h2 className="text-xl font-bold text-purple-400 mb-4">AI Code Review</h2>
+                    <div className="prose prose-invert prose-sm sm:prose-base max-w-none">
+                       <ReactMarkdown>{AIReview}</ReactMarkdown>
+                    </div>
+                </div>
+            </div>
+        )}
     </div>
   );
 }

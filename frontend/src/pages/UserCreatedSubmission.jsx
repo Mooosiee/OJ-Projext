@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-{/*Not very sure of the UI in this*/}
+import Preloader from "../components/Preloader"; // Assuming Preloader is available
+
 export default function MySubmissions() {
   const user  = useSelector((state) => state.user.user);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [submissions, setSubmissions] = useState([]);
+
+  // --- No changes made to the functionality below ---
   useEffect(() => {
     const fetchSubmissions = async () => {
       if (!user?._id) return;
@@ -34,58 +37,73 @@ export default function MySubmissions() {
     fetchSubmissions();
   }, [user]);
 
+  // --- Themed JSX Starts Here ---
   return (
-    <div className="bg-background min-h-screen text-text-primary py-8 px-4">
+    // 1. Main Container: Full-page gradient background
+    <div className="min-h-screen bg-gradient-to-b from-[#4C1D95] via-[#1E1B4B] to-black text-text-primary py-12 px-4">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-semibold text-primary mb-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">
           My Submissions
         </h1>
-        {loading && <p className="text-center text-text-secondary">Loading...</p>}
-        {error && <p className="text-center text-error">{error}</p>}
+
+        {loading && <Preloader />}
+        {error && <p className="text-center text-error bg-red-500/10 p-3 rounded-lg border border-error/30">{error}</p>}
         
         {!loading && !error && (
-          <div className="bg-surface rounded-xl shadow-lg p-4">
+          // 2. Submissions Card: "Frosted glass" effect, perfect for a table
+          <div className="bg-black/30 backdrop-blur-xl shadow-2xl rounded-xl overflow-hidden">
             {submissions && submissions.length > 0 ? (
-              <ul className="divide-y divide-border">
-                {/* 1. ADDED A HEADER ROW for context */}
-                <li className="py-3 flex items-center font-semibold text-text-secondary">
-                  <div className="w-1/4 pl-2">Date & Time</div>
-                  <div className="w-1/2">Problem Title</div>
-                  <div className="flex gap-8">
-                      <div >Language</div>
-                      <div >Verdict</div>
-                  </div>
-                </li>
-                {/* 2. MAPPING THE DATA with the correct layout */}
+              <div className="divide-y divide-white/10">
+                
+                {/* 3. Table Header: Clear, uppercase, and subtly distinct */}
+                <div className="px-6 py-4 flex items-center font-semibold text-xs text-gray-400 uppercase bg-white/5">
+                  <div className="w-2/5">Problem</div>
+                  <div className="w-1/5 text-center">Language</div>
+                  <div className="w-1/5 text-center">Verdict</div>
+                  <div className="w-1/5 text-right">Submitted</div>
+                </div>
+                
+                {/* 4. Submissions List: Mapping over data to create themed rows */}
                 {submissions.map((submission) => (
-                  <li key={submission._id} className="py-4 flex items-center hover:bg-background transition-colors duration-200 rounded-md">
-                    {/* Column 1: Date (Formatted and with defined width) */}
-                    <div className="w-1/4 text-sm text-text-secondary pl-2">
-                      {new Date(submission.createdAt).toLocaleString()}
-                    </div>
-
-                    {/* Column 2: Problem Title (Wider, with a link) */}
-                    <div className="w-1/2 font-medium">
-                      <Link to={`/problems/${submission.problem?._id}`} className="hover:text-primary transition">
+                  <div key={submission._id} className="px-6 py-4 flex items-center hover:bg-white/5 transition-colors duration-200">
+                    
+                    {/* Problem Title */}
+                    <div className="w-2/5 font-semibold">
+                      <Link to={`/problems/${submission.problem?._id}`} className="text-white hover:text-purple-400 transition">
                         {submission.problem?.name || 'Unknown Problem'}
                       </Link>
                     </div>
 
-                    {/* Column 3: Language (Centered) */}
-                    <div className="flex gap-10">
-                        <div className="w-1/8">{submission.language}</div>
-                        {/* Column 4: Verdict (Right-aligned with color) */}
-                        <div className={`w-1/8 text-right font-semibold pr-2 ${
-                            submission.verdict === 'Accepted' ? 'text-success' : 'text-error'
-                        }`}>
-                          {submission.verdict}
-                        </div>
+                    {/* Language Pill */}
+                    <div className="w-1/5 text-center">
+                       <span className="bg-gray-500/30 text-gray-300 text-xs font-medium px-2.5 py-1 rounded-full">
+                          {submission.language}
+                        </span>
                     </div>
-                  </li>
+                    
+                    {/* Verdict Pill */}
+                    <div className="w-1/5 text-center">
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold
+                        ${
+                          submission.verdict === 'Accepted' 
+                            ? "bg-green-500/10 text-green-400" 
+                            : "bg-red-500/10 text-red-400"
+                        }`}
+                      >
+                        {submission.verdict}
+                      </span>
+                    </div>
+
+                    {/* Date */}
+                    <div className="w-1/5 text-sm text-text-secondary text-right">
+                      {new Date(submission.createdAt).toLocaleString()}
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             ) : (
-              <p className="text-center text-text-secondary py-8">
+              // 5. Empty State: Styled for clarity
+              <p className="text-center text-text-secondary py-16">
                 You haven't made any submissions yet.
               </p>
             )}

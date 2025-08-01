@@ -4,9 +4,20 @@
 *{
     box-sizing: border-box;
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
 body{
     /* black */
-    background-color: black;
+    background:linear-gradient(
+    to bottom,
+    rgba(147, 62, 255), /* from-primary-ii/90 */
+    black,                   /* via-black */
+    black                    /* to-black */
+  );
 }
 
 @keyframes preloader-line {

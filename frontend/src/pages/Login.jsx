@@ -3,29 +3,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { SigninSuccess, SignInFailure } from "../redux/userSlice.js";
 import { useAuth0 } from "@auth0/auth0-react";
-// useDispatch is a hook that gives you access to the dispatch function from the Redux store
-// it allows you to dispatch actions to the store
-//what is react-redux?
-// React-Redux is a library that provides bindings to use Redux with React
-//so Link,useNavigate, useDispatch are all hooks?
-// yes, Link and useNavigate are hooks from React Router for navigation, and useDispatch is a hook from React-Redux
-// for dispatching actions and  useState is a hook from the React library that allows you to manage state in
-// functional components
-// Hooks are special functions in React that let you use state and other React features in functional components
 
 export default function Login() {
   const [formData, setFormData] = useState({});
-  // const [error, setError] = useState(null);//instead of using the local we use this
-  const { error } = useSelector((state) => state.user); // Access error from Redux store
+  const { error } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize the dispatch function from Redux
+  const dispatch = useDispatch();
   const { loginWithRedirect } = useAuth0();
+
+  // --- Handlers for form changes and API calls (functionality remains the same) ---
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -38,32 +31,38 @@ export default function Login() {
       });
       const data = await res.json();
       if (data.success === false) {
-        dispatch(SignInFailure(data.message)); // Dispatch error message to Redux store
+        dispatch(SignInFailure(data.message));
         return;
       }
-      dispatch(SigninSuccess(data)); // Dispatch user data to Redux store
+      dispatch(SigninSuccess(data));
       navigate("/");
     } catch (error) {
       dispatch(SignInFailure(error.message));
-      return;
     }
   };
+
+  // --- Themed JSX Starts Here ---
   return (
-    <div className="bg-background min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 text-text-primary">
-      <div className="max-w-md w-full space-y-8 bg-surface p-8 md:p-10 rounded-xl shadow-2xl">
+    // 1. Main Container: Consistent full-page gradient and centering.
+    <div className="min-h-screen bg-gradient-to-b from-[#4C1D95] via-[#1E1B4B] to-black flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 text-text-primary">
+      
+      {/* 2. Login Card: Themed with the "frosted glass" effect. */}
+      <div className="max-w-md w-full space-y-8 bg-black/30 backdrop-blur-xl p-8 md:p-10 rounded-2xl shadow-2xl border border-purple-500/30">
         <div>
-          <h1 className="mt-6 text-center text-4xl font-bold tracking-tight text-primary">
+          {/* <h1 className="font-playwrite text-center text-4xl font-bold tracking-tight text-purple-400">
             OG-OJ
-          </h1>
-          {/* Optional: Add a subtitle like "Sign in to continue" */}
+          </h1> */}
+          <h2 className="mt-2 text-center text-xl font-medium text-gray-300">
+            Welcome Back
+          </h2>
         </div>
+
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm flex flex-col gap-6">
+          <div className="rounded-md flex flex-col gap-6">
+            
+            {/* 3. Form Inputs: Styled to match the dark theme. */}
             <div>
-              <label
-                htmlFor="email"
-                className="block mb-1 text-sm font-medium text-text-secondary"
-              >
+              <label htmlFor="email" className="block mb-2 text-sm font-medium text-text-secondary">
                 Email address
               </label>
               <input
@@ -72,16 +71,13 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 required
-                className="bg-background border border-border text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-3.5 placeholder-text-secondary"
+                className="bg-black/20 border border-white/10 text-text-primary text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 block w-full p-3.5 placeholder-gray-500 transition-all"
                 placeholder="you@example.com"
                 onChange={handleChange}
               />
             </div>
             <div>
-              <label
-                htmlFor="password"
-                className="block mb-1 text-sm font-medium text-text-secondary"
-              >
+              <label htmlFor="password" className="block mb-2 text-sm font-medium text-text-secondary">
                 Password
               </label>
               <input
@@ -90,7 +86,7 @@ export default function Login() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="bg-background border border-border text-text-primary text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-3.5 placeholder-text-secondary"
+                className="bg-black/20 border border-white/10 text-text-primary text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 block w-full p-3.5 placeholder-gray-500 transition-all"
                 placeholder="••••••••"
                 onChange={handleChange}
               />
@@ -98,44 +94,34 @@ export default function Login() {
           </div>
 
           <div className="flex items-center justify-end mt-2">
-            {" "}
-            {/* Changed to justify-end for forgot password */}
             <div className="text-sm">
-              <p
-                className="font-medium text-secondary hover:text-cyan-400 transition cursor-pointer hover:underline"
-                onClick={() =>
-                  alert(
-                    "Forgot password clicked - did not implement functionality yet!."
-                  )
-                } // An alert for now
-              >
+              <p className="font-medium text-purple-400 hover:text-purple-300 transition cursor-pointer hover:underline">
                 Forgot password?
               </p>
             </div>
           </div>
 
-          <div>
+          {/* 4. Submit & Auth0 Buttons: Themed for consistency. */}
+          <div className="space-y-4">
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-surface focus:ring-primary transition duration-150 ease-in-out disabled:opacity-70"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary hover:bg-purple-600 focus:outline-none focus:ring-4 focus:ring-purple-500/50 transition-all duration-150 ease-in-out transform hover:scale-105 disabled:opacity-60"
             >
               Sign In
             </button>
+            {/* <button
+              onClick={() => loginWithRedirect()}
+              type="button"
+              className="w-full flex items-center justify-center py-3 px-4 border border-white/20 text-sm font-semibold rounded-lg text-white bg-white/10 hover:bg-white/20 transition duration-150 ease-in-out"
+            >
+              Sign in with Auth0
+            </button> */}
           </div>
-          {/* Auth0 Login Button */}
-      <div className="mt-4">
-        <button
-          onClick={() => loginWithRedirect()}
-          type="button"
-          className="w-full flex items-center justify-center py-3 px-4 border border-gray-300 text-sm font-semibold rounded-lg text-gray-800 bg-white hover:bg-gray-100 shadow-sm transition duration-150 ease-in-out"
-        >
-          Sign in with Auth0
-        </button>
-      </div>
         </form>
 
-        {error && ( // Display error from Redux store
-          <p className="mt-4 text-center text-sm text-error bg-red-500/10 p-3 rounded-md font-medium">
+        {/* 5. Error Message: Themed for visibility. */}
+        {error && (
+          <p className="mt-4 text-center text-sm text-error bg-red-500/10 p-3 rounded-md font-medium border border-error/30">
             {error}
           </p>
         )}
@@ -144,7 +130,7 @@ export default function Login() {
           Don't have an account?{" "}
           <Link
             to="/signup"
-            className="font-medium text-custom_btn hover:text-opacity-80 hover:underline transition"
+            className="font-medium text-purple-400 hover:text-purple-300 hover:underline transition"
           >
             Sign Up
           </Link>

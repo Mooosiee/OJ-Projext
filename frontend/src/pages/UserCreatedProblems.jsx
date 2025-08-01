@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Preloader from "../components/Preloader"; // Assuming Preloader component is available for a better loading state
 
 export default function UserCreatedProb() {
   const user = useSelector((state) => state.user.user);
@@ -12,6 +13,7 @@ export default function UserCreatedProb() {
   const [showDialog, setShowDialog] = useState(false);
   const [problemToDelete, setProblemToDelete] = useState(null);
 
+  // --- No changes made to the functionality below ---
   useEffect(() => {
     const fetchProblem = async () => {
       if (!user?._id) return;
@@ -19,12 +21,11 @@ export default function UserCreatedProb() {
         setLoading(true);
         setError(null);
         const apiUrl = import.meta.env.VITE_API_URL;
-        const res = await fetch(`${apiUrl}/backend/user/${user._id}/problems`,{
+        const res = await fetch(`${apiUrl}/backend/user/${user._id}/problems`, {
            method: "GET",
           credentials: "include"
         });
         const data = await res.json();
-
         if (data.success === false) {
           setError(data.message);
           setLoading(false);
@@ -37,13 +38,11 @@ export default function UserCreatedProb() {
         setLoading(false);
       }
     };
-
     fetchProblem();
   }, [user]);
 
   const handleDeleteProblem = async () => {
     if (!problemToDelete) return;
-
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
       const res = await fetch(`${apiUrl}/backend/problems/delete/${problemToDelete}`, {
@@ -51,13 +50,10 @@ export default function UserCreatedProb() {
         credentials: "include"
       });
       const data = await res.json();
-
       if (data.success === false) {
         alert(`Error: ${data.message}`);
         return;
       }
-
-      // Update UI
       setProblems((prev) => prev.filter((prob) => prob._id !== problemToDelete));
       setShowDialog(false);
       setProblemToDelete(null);
@@ -66,38 +62,46 @@ export default function UserCreatedProb() {
     }
   };
 
+  // --- Themed JSX Starts Here ---
   return (
-    <div className="bg-background min-h-screen text-text-primary py-8 px-4">
+    // 1. Main Container: Full-page gradient background
+    <div className="min-h-screen bg-gradient-to-b from-[#4C1D95] via-[#1E1B4B] to-black text-text-primary py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-semibold text-primary mb-6">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-8">
           My Created Problems
         </h1>
-
-        {loading && <p className="text-center text-text-secondary">Loading...</p>}
-        {error && <p className="text-center text-error">{error}</p>}
+        
+        {/* 2. Loading and Error States: Themed for consistency */}
+        {loading && <Preloader />}
+        {error && <p className="text-center text-error bg-red-500/10 p-3 rounded-lg border border-error/30">{error}</p>}
 
         {!loading && !error && (
-          <div className="bg-surface rounded-xl shadow-lg p-4">
+          // 3. Problem List Card: "Frosted glass" effect
+          <div className="bg-black/30 backdrop-blur-xl shadow-2xl rounded-xl">
             {problems.length > 0 ? (
-              <ul className="divide-y divide-border">
+              <ul className="divide-y divide-white/10">
                 {problems.map((problem) => (
                   <li
                     key={problem._id}
-                    className="py-4 flex justify-between items-center"
+                    className="p-4 flex justify-between items-center transition-all hover:bg-white/5"
                   >
-                    <div>
-                      <Link
-                        to={`/problems/${problem._id}`}
-                        className="text-lg font-semibold text-text-primary hover:text-primary transition"
-                      >
-                        {problem.name}
-                      </Link>
-                    </div>
+                    {/* 4. Problem Link and Actions: Themed */}
+                    <Link
+                      to={`/problems/${problem._id}`}
+                      className="text-lg font-semibold text-white hover:text-purple-400 transition-colors"
+                    >
+                      {problem.name}
+                    </Link>
 
-                    <div className="flex gap-8">
-                      <Link to={`/edit-problem/${problem._id}`}>Edit</Link>
+                    <div className="flex items-center gap-4">
+                      <Link 
+                        to={`/edit-problem/${problem._id}`}
+                        className="font-medium text-sm text-secondary hover:text-green-400 hover:underline"
+                      >
+                        Edit
+                      </Link>
                       <button
-                        className="text-error hover:underline"
+                        className="font-medium text-sm text-error hover:text-red-400 hover:underline"
                         onClick={() => {
                           setShowDialog(true);
                           setProblemToDelete(problem._id);
@@ -110,7 +114,8 @@ export default function UserCreatedProb() {
                 ))}
               </ul>
             ) : (
-              <p className="text-center text-text-secondary py-8">
+              // 5. Empty State: Styled for clarity
+              <p className="text-center text-text-secondary py-16">
                 You haven't created any problems yet.
               </p>
             )}
@@ -118,25 +123,25 @@ export default function UserCreatedProb() {
         )}
       </div>
 
-      {/* Delete Confirmation Dialog */}
+      {/* 6. Delete Confirmation Modal: Fully themed */}
       {showDialog && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-[90%] max-w-sm">
-            <h2 className="text-lg font-semibold mb-4 text-primary">Confirm Deletion</h2>
-            <p className="text-text-secondary mb-6">Are you sure you want to delete this problem?</p>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 p-6 md:p-8 rounded-2xl shadow-2xl max-w-md w-full border border-purple-500/30">
+            <h2 className="text-xl font-semibold mb-4 text-white">Confirm Deletion</h2>
+            <p className="text-text-secondary mb-6">Are you sure you want to delete this problem? This action cannot be undone.</p>
             <div className="flex justify-end gap-4">
               <button
                 onClick={() => {
                   setShowDialog(false);
                   setProblemToDelete(null);
                 }}
-                className="px-4 py-2 rounded-lg bg-gray-300 text-gray-800 dark:bg-gray-700 dark:text-gray-200 hover:opacity-90"
+                className="px-5 py-2.5 bg-white/10 text-text-primary rounded-lg hover:bg-white/20 transition duration-300 font-medium"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteProblem}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                className="px-5 py-2.5 bg-error text-white rounded-lg hover:bg-red-500 transition duration-300 font-medium"
               >
                 Delete
               </button>
