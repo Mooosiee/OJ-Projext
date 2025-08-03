@@ -10,6 +10,7 @@ export const fetchProblemById = async (req, res, next) => {
     console.log("--------------------------------------------------"); // Separator
     console.log("[Middleware] fetchProblemById: Entered");
     try {
+        console.log(req.body);
         const { problemId } = req.body;
         console.log("[Middleware] fetchProblemById: Extracted problemId from req.body:", problemId);
 

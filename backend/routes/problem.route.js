@@ -12,7 +12,12 @@ const router = express.Router();
 router.post("/create", verifyToken, createProblems);
 router.get("/all", getAllProblems);
 router.get("/:id", getAProblem);
+
+//Admin can update and delete problems of any user
+//User can update and delete only their own problems
+
 router.put("/update/:problemId",verifyToken,updateProblem);
 router.delete("/delete/:problemId",verifyToken,deleteProblem);
+
 
 export default router;

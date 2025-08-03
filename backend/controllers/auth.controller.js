@@ -10,10 +10,12 @@ export const SignUp = async (req, res,next) => {
     if (!(username && email && password)) {
       return res.status(400).send("Please enter all the information");
     }
-    //check if the user exists:will be caught in error 
-
+    //check if the user exists:will be caught in error
     //add more validations
-
+    //adding isAdmin check 
+    const validUser = User.findOne({ email });
+    const isAdmin = validUser.email === "admin@gmail.com";
+    const userRole = isAdmin ? "admin" : validUser.role;
     //hashing/encrypt the password
     const hashedPassword = bcrypt.hashSync(password, 10);
 
@@ -24,7 +26,7 @@ export const SignUp = async (req, res,next) => {
       password: hashedPassword,
     });
     //generate a token for user and send it
-    const token = jwt.sign({ id: user._id, email }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ id: user._id, email , role: userRole }, process.env.SECRET_KEY, {
       expiresIn: "31d",
     });
     user.token = token;

@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux';
 
 export default function Header() {
   // We get the user state to conditionally show the profile image or login button
-  const  currentUser = useSelector((state) => state.user.user);
-  console.log(currentUser);
+  const currentUser = useSelector((state) => state.user.user);
+  const isAdmin = currentUser?.role === 'admin';
+  console.log(currentUser?.role);
   // We use the `useLocation` hook to know which page the user is currently on
   const location = useLocation();
 
@@ -51,6 +52,7 @@ export default function Header() {
             <li><Link to='/problems/all' className={getLinkClass('/problems/all')}>Problems</Link></li>
             <li><Link to='/contests' className={getLinkClass('/contests')}>Contests</Link></li>
             <li><Link to='/leaderboard' className={getLinkClass('/leaderboard')}>Leaderboard</Link></li>
+            {isAdmin && <li><Link to='/admin-dashboard' className={getLinkClass('/admin-dashboard')}>Admin</Link></li>}
           </ul>
         </div>
         
@@ -60,9 +62,9 @@ export default function Header() {
           <Link to='/profile'>
             {currentUser ? (
               <img 
-                src={currentUser.avatar} 
+                src={`https://api.dicebear.com/8.x/identicon/svg?seed=${currentUser.username}`}
                 alt='profile'  
-                className="h-10 w-10 rounded-full object-cover border-2 border-transparent hover:border-purple-500 transition-all"
+                className="h-10 w-10 rounded-sm object-cover border-[0.75px] border-white hover:border-purple-500 transition-all"
               />
             ) : (
               <button className="font-semibold bg-purple-600 text-white px-5 py-2 rounded-lg hover:bg-purple-500 transition-colors text-sm">

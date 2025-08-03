@@ -27,6 +27,7 @@ export const getAllProblems = async (req, res, next) => {
       difficulty: problem.difficulty,
       tags: problem.tags,
       createdAt: problem.createdAt,
+      userRef : problem.userRef,
     }));
 
     res.status(200).json(formattedProblems);
@@ -70,7 +71,15 @@ export const updateProblem = async (req, res, next) => {
     if (!mongoose.Types.ObjectId.isValid(problemId)) {
       return next(errorHandler(400, "Invalid problem ID format"));
     }
-
+    const problem = await Problem.findById(problemId);
+    // Check if the user is the creator or an admin
+    console.log(req.user.id);
+    console.log(problem.userRef.toString());
+    if (problem.userRef.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "You are not authorized to update this problem." });
+    }
+    console.log(`[Update Problem Function] - Updated request body`);
+    console.log(req.body);
     const updatedProblem = await Problem.findByIdAndUpdate(
       problemId,
       req.body, // This contains the updated fields from frontend
@@ -83,6 +92,7 @@ export const updateProblem = async (req, res, next) => {
 
     res.status(200).json(updatedProblem);
   } catch (error) {
+    console.log(`[Update Problem Function] - Caught ${error}`);
     next(error);
   }
 };
@@ -94,9 +104,13 @@ export const deleteProblem = async (req, res, next) => {
       return next(errorHandler(400, "Invalid problem ID format"));
     }
 
+    const problem = await Problem.findById(problemId);
+    if (problem.userRef.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ message: "You are not authorized to delete this problem." });
+    }
     const deletedProblem = await Problem.findByIdAndDelete(problemId);
     console.log(deletedProblem);
-    if (!deletedProblem) {
+    if (!deletedProblem){
       return next(errorHandler(404, "Problem not found"));
     }
 

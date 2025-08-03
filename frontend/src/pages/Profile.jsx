@@ -94,15 +94,15 @@ export default function Profile() {
       <div className="max-w-lg mx-auto bg-black/30 backdrop-blur-xl p-6 md:p-8 rounded-2xl shadow-2xl border border-purple-500/30">
         
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-white">
-          Profile
+          {currentUser.username}
         </h1>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* 3. Avatar: Ring effect matching the primary theme color. */}
           <img
-            src={currentUser.avatar}
+            src={`https://api.dicebear.com/8.x/identicon/svg?seed=${currentUser.username}`}
             alt="profile"
-            className="h-28 w-28 rounded-full object-cover cursor-pointer self-center shadow-lg ring-4 ring-offset-4 ring-offset-black ring-purple-500"
+            className="h-28 w-28 rounded-sm object-cover self-center shadow-lg border-[0.75px] border-white  "
           />
           
           {/* 4. Form Inputs: Consistent dark, themed styling. */}

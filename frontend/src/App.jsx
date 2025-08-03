@@ -13,6 +13,7 @@ import Contests from "./pages/Contests.jsx";
 import Leaderboard from "./pages/Leaderboard.jsx";
 // import ForgotPassword from './pages/ForgotPass.jsx';
 import Header from "./components/Header.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 export default function App() {
   return (
     <BrowserRouter>
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/user/submissions" element={<UserCreatedSub />} />
         <Route path="/contests" element={<Contests />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

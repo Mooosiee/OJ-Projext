@@ -16,9 +16,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    avatar:{
-      type:String,
-      default: "https://th.bing.com/th/id/OIP.7FsDgas0kcH0W1ajb1rZEgHaHa?cb=iwc2&rs=1&pid=ImgDetMain"
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user'
     }
   },
   {
