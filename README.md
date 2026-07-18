@@ -80,9 +80,9 @@ npm run dev
 ### 2️⃣ Start the Frontend
 
 ```bash
-cd ../frontend
+cd frontend
 npm install
-npm start
+npm run dev
 ```
 
 ---
@@ -90,7 +90,7 @@ npm start
 ### 3️⃣ Start the Compiler Service (Docker)
 
 ```bash
-cd ../compiler-service
+cd ./compiler-service
 docker build -t oj-compiler .
 docker run -p 8000:8000 oj-compiler
 ```
